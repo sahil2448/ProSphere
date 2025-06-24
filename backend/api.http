@@ -5,16 +5,48 @@ content-type: application/json
 {
     "name": "bahubali",
     "username": "bahu",
-    "email": "b@b.com",
-    "password": "password123"
+    "email": "bb@gmail.com",
+    "password": "1111"
 }
-
 ###
 
 POST http://localhost:9090/users/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "b@b.com",
-    "password": "password123"
+    "email": "bb@gmail.com",
+    "password": "1111"
 }
+
+###
+GET  http://localhost:9090/users/get_user_and_profile HTTP/1.1
+content-type: application/json
+
+{
+    "token":"ed35c63e9111ce1a5947fea096cf7fd3bafb66d4c641aa436d41dc1374141038"
+}
+
+###
+POST http://localhost:9090/users/update_profile_data HTTP/1.1
+content-type: application/json
+
+{
+    "token":"67b30f9a7ae21750e1842f6b685fdb475a33bf805eecc05fdcc147782e5fc225",
+    "bio":"Experienced software engineer",
+    "currentPost":"CTO",
+    "pastWork":[
+        {
+            "company":"Google",
+        "position":"Software Engineer",
+        "fieldOfStudy":"Computer Science"
+        }
+    ],
+    "education":[
+        {"school":"IIT",
+        "degree":"Bachelor of Science",
+        "fieldOfStudy":"Computer Science"
+        }
+    ]
+}
+###
+GET http://localhost:9090/users/get_All_User_Profile HTTP/1.1

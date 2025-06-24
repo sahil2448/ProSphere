@@ -23,7 +23,7 @@ const workSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  fieldOfStudy: {
+  Year: {
     type: String,
     default: "",
   },
