@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import PDFDocument from "pdfkit";
 import fs from "fs";
+import ConnectionRequest from "../models/connections.model.js";
+import Comment from "../models/comments.model.js";
 
 const convertUserDataToPDF = async (userData) => {
   const doc = new PDFDocument();
@@ -12,20 +14,18 @@ const convertUserDataToPDF = async (userData) => {
   const stream = fs.createWriteStream("uploads/" + outputPath);
   doc.pipe(stream);
 
-  doc.image("uploads/" + userData.profilePicture, {
+  doc.image("uploads/" + userData.userId.profilePicture, {
     align: "center",
     width: 100,
   });
 
-  doc.fontSize(14).text(`Name: ${userData.name}`, { align: "center" });
-  doc.fontSize(14).text(`Username: ${userData.username}`, { align: "center" });
-  doc.fontSize(14).text(`Email: ${userData.email}`, { align: "center" });
-  doc.fontSize(14).text(`bio: ${userData.bio}`, { align: "center" });
-  doc
-    .fontSize(14)
-    .text(`Current position: ${userData.currentPost}`, { align: "center" });
+  doc.fontSize(14).text(`Name: ${userData.userId.name}`);
+  doc.fontSize(14).text(`Username: ${userData.userId.username}`);
+  doc.fontSize(14).text(`Email: ${userData.userId.email}`);
+  doc.fontSize(14).text(`bio: ${userData.bio}`);
+  doc.fontSize(14).text(`Current position: ${userData.currentPost}`);
   doc.fontSize(14).text(`Past Work :`);
-  userData.forEach((work, idx) => {
+  userData.pastWork.forEach((work, idx) => {
     doc.fontSize(14).text(`Company Name: ` + work.company);
     doc.fontSize(14).text(`Position: ` + work.position);
   });
@@ -187,7 +187,7 @@ const getAllUserProfile = async (req, res) => {
       "userId",
       "name username email profilePicture"
     );
-    return res.json(allUserProfile);
+    return res.json({ allUserProfile });
   } catch (e) {
     return res.status(500).json({ message: e.message });
   }
@@ -208,6 +208,144 @@ const downloadProfile = async (req, res) => {
   }
 };
 
+const sendConnectionRequest = async (req, res) => {
+  try {
+    const { token, connectionId } = req.body; // token will be used to find the user...and connection id will be used to find the connection-user
+
+    const user = await User.findOne({ token });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const connectionUser = await User.findOne({
+      _id: connectionId,
+    });
+
+    if (!connectionUser) {
+      return res.status(404).json({ message: "Connection user not found" });
+    }
+
+    const existingUser = ConnectionRequest.findOne({
+      userId: user._id,
+      connectionId: connectionUser._id,
+    });
+
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "Connection request already sent" });
+    }
+
+    const request = new ConnectionRequest({
+      userId: user._id,
+      connectionId: connectionUser._id,
+    });
+
+    await request.save();
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const getMyConnectionsRequests = async (req, res) => {
+  // mere send kiye hue connectionRequests
+  const { token } = req.body;
+  try {
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const connections = await ConnectionRequest.find({
+      // maine kisko kisko connection request send kia hai...vo muze milega
+
+      userId: user._id,
+    }).populate("connectionId", "name username email profilePicture");
+
+    //Here, each ConnectionRequest document has a connectionId field that stores the ObjectId of a user you sent a connection request to.
+    // By default, connectionId would just be an ID (like "662b...f3").
+    // Using .populate("connectionId", "name username email profilePicture") replaces the connectionId field with the actual user document, but only with the selected fields (name, username, email, profilePicture).
+
+    return res.json(connections);
+  } catch (e) {
+    return res.status(500).json({ message: e.message });
+  }
+};
+
+const whatAreMyConnections = async (req, res) => {
+  const { token } = req.body;
+  try {
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const connections = await ConnectionRequest.find({
+      connectionId: user._id,
+    }).populate("userId", "name username email profilePicture");
+
+    return res.json(connections);
+  } catch (e) {
+    return res.status(500).json({ message: e.message });
+  }
+};
+
+const acceptConnectionRequest = async (req, res) => {
+  const { token, requestId, action_type } = req.body;
+  try {
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const connection = await ConnectionRequest.findOne({ _id: requestId });
+
+    if (!connection) {
+      return res.status(404).json({ message: "Connection not found" });
+    }
+
+    if (action_type === "accept") {
+      connection.status_accepted = true;
+    } else {
+      connection.status_accepted = false;
+    }
+
+    await connection.save();
+    return res.json({ message: "Request Updated !" });
+  } catch (error) {}
+};
+
+const commentPost = async (req, res) => {
+  const { token, postId, commentBody } = req.body;
+  try {
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const post = await Post.findOne({ _id: postId });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const comment = new Comment({
+      userId: user._id,
+      postId: post._id,
+      comment: commentBody,
+    });
+
+    await comment.save();
+    return res.status(200).json({ message: "Comment added successfully" });
+  } catch (e) {
+    return res.status(500).json({ message: e.message });
+  }
+};
+
 export {
   register,
   Login,
@@ -217,4 +355,9 @@ export {
   updateProfileData,
   getAllUserProfile,
   downloadProfile,
+  sendConnectionRequest,
+  getMyConnectionsRequests,
+  whatAreMyConnections,
+  acceptConnectionRequest,
+  commentPost,
 };

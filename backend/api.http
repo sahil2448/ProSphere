@@ -23,7 +23,7 @@ GET  http://localhost:9090/users/get_user_and_profile HTTP/1.1
 content-type: application/json
 
 {
-    "token":"ed35c63e9111ce1a5947fea096cf7fd3bafb66d4c641aa436d41dc1374141038"
+    "token":"493749a2d984239b318cd39231e424c0473b7db44a90d0bb1b8a0daf8b3b8941"
 }
 
 ###
@@ -31,22 +31,35 @@ POST http://localhost:9090/users/update_profile_data HTTP/1.1
 content-type: application/json
 
 {
-    "token":"67b30f9a7ae21750e1842f6b685fdb475a33bf805eecc05fdcc147782e5fc225",
-    "bio":"Experienced software engineer",
-    "currentPost":"CTO",
+    "token":"493749a2d984239b318cd39231e424c0473b7db44a90d0bb1b8a0daf8b3b8941",
+    "bio":"Bahubali",
+    "currentPost":"Maharaja",
     "pastWork":[
         {
-            "company":"Google",
-        "position":"Software Engineer",
-        "fieldOfStudy":"Computer Science"
+            "company":"Maheshmati samrajya",
+        "position":"Raja",
+        "fieldOfStudy":"Leadership"
         }
     ],
     "education":[
-        {"school":"IIT",
-        "degree":"Bachelor of Science",
-        "fieldOfStudy":"Computer Science"
+        {"school":"Maheshmati University",
+        "degree":"12th fail",
+        "fieldOfStudy":"Naaah."
         }
     ]
 }
 ###
-GET http://localhost:9090/users/get_All_User_Profile HTTP/1.1
+GET http://localhost:9090/users/user/get_All_Users HTTP/1.1
+
+
+###
+GET http://localhost:9090/get_all_posts HTTP/1.1
+
+###
+DELETE  http://localhost:9090/delete_post HTTP/1.1
+content-type: application/json
+
+{
+    "token":"f53a037a32a16bfefc4ee7f66ae66f42739e359592b14473d03cfd8c100e9874",
+    "postId":"685ce693f95a8d69dc14d608"
+}
