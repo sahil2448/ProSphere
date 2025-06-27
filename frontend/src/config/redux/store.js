@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authRedcer from "./reducer/authReducer";
 /**
  * STEPS FOR STATE MANAGEMENT:
  * Submit action
@@ -8,5 +9,7 @@ import { configureStore } from "@reduxjs/toolkit";
  */
 
 export const store = configureStore({
-    reducer:{}
-})
+  reducer: {
+    auth: authRedcer,
+  },
+});
