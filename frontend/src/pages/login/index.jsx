@@ -1,7 +1,144 @@
-import React from "react";
+import { loginUser, registerUser } from "@/config/redux/action/authAction";
+import UserLayout from "@/layout/UserLayout";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function index() {
-  return <div>Login Page</div>;
+  const authState = useSelector((state) => state.auth);
+  const [UserLoginMethod, setUserLoginMethod] = useState(false);
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [checkSignUpFields, setCheckSignUpFields] = useState(false);
+  const [checkLoginFields, setCheckLoginFields] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (authState.loggedIn) {
+      router.push("/dashboard");
+    }
+  }, [authState.loggedIn]);
+
+  const handleRegister = () => {
+    console.log("Registering...");
+    dispatch(
+      registerUser({
+        name,
+        username,
+        email,
+        password,
+      })
+    );
+    setUserLoginMethod(true);
+  };
+
+  const handleLogin = () => {
+    console.log("Logging in...");
+    dispatch(
+      loginUser({
+        email,
+        password,
+      })
+    );
+  };
+
+  useEffect(() => {
+    setCheckSignUpFields(name && username && email && password);
+  }, [name, username, email, password]);
+
+  useEffect(() => {
+    setCheckLoginFields(email && password);
+  }, [email, password]);
+
+  return (
+    <UserLayout>
+      <div className="flex justify-center items-center bg-indigo-100/20 h-[90vh] ">
+        <div className=" h-[80vh] w-[80vw] bg-white shadow-xl flex flex-col justify-between md:flex-row md:justify-center items-center">
+          <div className="w-[100%] md:w-[60%] flex flex-col items-center">
+            <p className="font-semibold text-2xl">
+              {" "}
+              {UserLoginMethod ? "Sign In" : "Sign Up"}
+            </p>
+
+            <p
+              className={authState.isError ? `text-red-500` : `text-green-500`}
+            >
+              {authState.message.message}
+            </p>
+            <div className="flex flex-col gap-5 mt-10 min-w-[55%] max-w-[100%]">
+              {!UserLoginMethod && (
+                <div className="flex flex-col lg:flex-row gap-2">
+                  <input
+                    type="username"
+                    placeholder="Username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="border-1 border-gray-500 p-2 rounded-lg"
+                  />
+                  <input
+                    type="name"
+                    placeholder="Name"
+                    onChange={(e) => setName(e.target.value)}
+                    className="border-1 border-gray-500 p-2 rounded-lg"
+                  />
+                </div>
+              )}
+
+              <div className="flex flex-col gap-2">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="border-1 border-gray-500 p-2 rounded-lg"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="border-1 border-gray-500 p-2 rounded-lg"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <button
+                  className={` cursor-pointer p-2 rounded-lg  ${
+                    (checkSignUpFields && !UserLoginMethod) ||
+                    (checkLoginFields && UserLoginMethod)
+                      ? "bg-indigo-800 text-white"
+                      : "bg-gray-300/60 text-black"
+                  } transition-all duration-1000`}
+                  onClick={() => {
+                    if (UserLoginMethod) {
+                      handleLogin();
+                    } else {
+                      handleRegister();
+                    }
+                  }}
+                >
+                  {UserLoginMethod ? "Sign In" : "Sign Up"}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="w-[100%] md:w-[40%] bg-indigo-900 flex flex-col gap-3 justify-center items-center h-[15vh] md:h-full">
+            <p className="text-white">
+              {!UserLoginMethod
+                ? "Already have an account?"
+                : "Don't have an account?"}
+            </p>
+            <button
+              className="bg-gray-300/60 cursor-pointer px-8 py-2 rounded-lg"
+              onClick={() => setUserLoginMethod(!UserLoginMethod)}
+            >
+              {!UserLoginMethod ? "Sign In" : "Sign Up"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </UserLayout>
+  );
 }
 
 export default index;

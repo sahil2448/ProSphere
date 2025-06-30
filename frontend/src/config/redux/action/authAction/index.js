@@ -2,7 +2,7 @@ const { createAsyncThunk } = require("@reduxjs/toolkit");
 import { clientServer } from "@/config";
 const loginUser = createAsyncThunk("user/login", async (user, thunkAPI) => {
   try {
-    const response = clientServer.post("/users/login", {
+    const response = clientServer.post("user/login", {
       email: user.email,
       password: user.password,
     });
@@ -23,7 +23,20 @@ const loginUser = createAsyncThunk("user/login", async (user, thunkAPI) => {
 
 const registerUser = createAsyncThunk(
   "user/register",
-  async (user, thunkAPI) => {}
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.post("user/register", {
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+      });
+
+      console.log("User registered");
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
 );
 
 export { loginUser, registerUser };

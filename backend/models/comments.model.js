@@ -1,4 +1,4 @@
-import mongoose, { connection } from "mongoose";
+import mongoose from "mongoose";
 // comment ko pata hai ki konse post ke andar jana hai aur konse user ne bheja hai..!
 const commentSchema = new mongoose.Schema({
   userId: {

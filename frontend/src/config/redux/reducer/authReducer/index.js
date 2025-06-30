@@ -47,10 +47,11 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.message = "User registered successfully";
+        state.message = {
+          message: "You are registered successfully! Please login",
+        };
         state.isError = false;
         state.isSuccess = true;
-        state.loggedIn = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;

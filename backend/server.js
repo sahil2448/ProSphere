@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.static("uploads"));
 
 app.use("/", postRoutes);
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 
 const start = async () => {
   const connectDB = await mongoose.connect(
