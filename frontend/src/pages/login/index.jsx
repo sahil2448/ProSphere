@@ -1,4 +1,5 @@
 import { loginUser, registerUser } from "@/config/redux/action/authAction";
+import { emptyMessage } from "@/config/redux/reducer/authReducer";
 import UserLayout from "@/layout/UserLayout";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -15,11 +16,6 @@ function index() {
   const [checkLoginFields, setCheckLoginFields] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (authState.loggedIn) {
-      router.push("/dashboard");
-    }
-  }, [authState.loggedIn]);
 
   const handleRegister = () => {
     console.log("Registering...");
@@ -31,7 +27,7 @@ function index() {
         password,
       })
     );
-    setUserLoginMethod(true);
+    // setUserLoginMethod(true);
   };
 
   const handleLogin = () => {
@@ -42,6 +38,7 @@ function index() {
         password,
       })
     );
+    // setUserLoginMethod(false);
   };
 
   useEffect(() => {
@@ -52,6 +49,21 @@ function index() {
     setCheckLoginFields(email && password);
   }, [email, password]);
 
+  useEffect(() => {
+    dispatch(emptyMessage());
+  }, [UserLoginMethod]);
+
+  useEffect(() => {
+    if (authState.loggedIn) {
+      router.push("/dashboard");
+    }
+  }, [authState.loggedIn]);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      router.push("/dashboard");
+    }
+  });
   return (
     <UserLayout>
       <div className="flex justify-center items-center bg-indigo-100/20 h-[90vh] ">

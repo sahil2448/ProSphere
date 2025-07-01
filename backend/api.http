@@ -27,11 +27,11 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:9090/users/update_profile_data HTTP/1.1
+POST http://localhost:9090/user/update_profile_data HTTP/1.1
 content-type: application/json
 
 {
-    "token":"493749a2d984239b318cd39231e424c0473b7db44a90d0bb1b8a0daf8b3b8941",
+    "token":"a3991b70cc06f8564ae14724dd30e4674e3268820652aef50e453dcdaf60fe81",
     "bio":"Bahubali",
     "currentPost":"Maharaja",
     "pastWork":[
@@ -49,11 +49,17 @@ content-type: application/json
     ]
 }
 ###
-GET http://localhost:9090/users/user/get_All_Users HTTP/1.1
+GET http://localhost:9090/user/user/get_All_Users HTTP/1.1
+###
+POST /create_post HTTP/1.1
+Host: localhost:9090
+Content-Type: application/json
+Content-Length:  70
 
+{"token":"a3991b70cc06f8564ae14724dd30e4674e3268820652aef50e453dcdaf60fe81"}
 
 ###
-GET http://localhost:9090/get_all_posts HTTP/1.1
+GET http://localhost:9090/posts HTTP/1.1
 
 ###
 DELETE  http://localhost:9090/delete_post HTTP/1.1

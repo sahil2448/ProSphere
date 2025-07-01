@@ -2,10 +2,11 @@ const { createAsyncThunk } = require("@reduxjs/toolkit");
 import { clientServer } from "@/config";
 const loginUser = createAsyncThunk("user/login", async (user, thunkAPI) => {
   try {
-    const response = clientServer.post("user/login", {
+    const response = await clientServer.post("user/login", {
       email: user.email,
       password: user.password,
     });
+    console.log(response);
 
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
