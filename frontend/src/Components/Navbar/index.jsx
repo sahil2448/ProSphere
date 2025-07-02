@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import React from "react";
+// import { useSelector } from "react-redux";
 
 function Navbar() {
+  // const authState = useSelector((state) => state.auth);
   const router = useRouter();
   return (
     <div className="px-[2rem] h-[10vh]">
@@ -14,6 +16,8 @@ function Navbar() {
         >
           Pro Sphere
         </h1>
+        {/* {authState.profileFetched && <div>Hello</div>} */}
+        {/* {!authState.profileFetched && ( */}
         <div>
           <div
             onClick={() => {
@@ -24,6 +28,7 @@ function Navbar() {
             Be a part
           </div>
         </div>
+        {/* )} */}
       </div>
     </div>
   );

@@ -19,11 +19,11 @@ content-type: application/json
 }
 
 ###
-GET  http://localhost:9090/users/get_user_and_profile HTTP/1.1
+GET  http://localhost:9090/user/get_user_and_profile HTTP/1.1
 content-type: application/json
 
 {
-    "token":"493749a2d984239b318cd39231e424c0473b7db44a90d0bb1b8a0daf8b3b8941"
+    "token":"6dd3fa8ddffa727bd8c60a2ff0ca09f4e47ab8f466ec823c787d3b6485e3b96e"
 }
 
 ###

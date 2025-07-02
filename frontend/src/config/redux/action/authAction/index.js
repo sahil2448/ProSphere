@@ -40,4 +40,21 @@ const registerUser = createAsyncThunk(
   }
 );
 
-export { loginUser, registerUser };
+//Passing the token in params ensures the backend receives it in the expected format/location, allowing it to authenticate and authorize the request properly. If your backend expects the token in headers, you should use the Authorization header instead. Always match your frontend request format to your backend's requirements.
+const getAboutUser = createAsyncThunk(
+  "user/get_user_and_profile",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.get("user/get_user_and_profile", {
+        params: {
+          token: user.token,
+        },
+      });
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export { loginUser, registerUser, getAboutUser };
