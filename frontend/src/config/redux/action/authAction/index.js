@@ -57,4 +57,16 @@ const getAboutUser = createAsyncThunk(
   }
 );
 
-export { loginUser, registerUser, getAboutUser };
+const getAllUserProfiles = createAsyncThunk(
+  "user/get_All_Users",
+  async (_, thunkAPI) => {
+    try {
+      const response = await clientServer.get("user/get_All_Users");
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export { loginUser, registerUser, getAboutUser, getAllUserProfiles };

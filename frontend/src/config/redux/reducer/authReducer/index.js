@@ -1,6 +1,7 @@
 const { createSlice } = require("@reduxjs/toolkit");
 import {
   getAboutUser,
+  getAllUserProfiles,
   loginUser,
   registerUser,
 } from "../../action/authAction/index.js";
@@ -12,8 +13,11 @@ const initialState = {
   loggedIn: false,
   message: "",
   profileFetched: false,
+  allProfilesFetched: false,
+  isToken: false,
   connections: [],
   connectionRequest: [],
+  allUsers: [],
 };
 
 const authSlice = createSlice({
@@ -26,6 +30,12 @@ const authSlice = createSlice({
     },
     emptyMessage: (state) => {
       state.message = "";
+    },
+    setTokenIsPresent: (state) => {
+      state.isToken = true;
+    },
+    setTokenIsNotPresent: (state) => {
+      state.isToken = false;
     },
   },
   extraReducers: (builder) => {
@@ -72,10 +82,17 @@ const authSlice = createSlice({
         state.isError = false;
         state.isLoading = false;
         state.profileFetched = true;
+      })
+      .addCase(getAllUserProfiles.fulfilled, (state, action) => {
+        state.allUsers = action.payload.allUserProfile;
+        state.isError = false;
+        state.allProfilesFetched = true;
+        state.isLoading = false;
       });
   },
 });
 
-export const { reset, emptyMessage } = authSlice.actions;
+export const { reset, emptyMessage, setTokenIsPresent, setTokenIsNotPresent } =
+  authSlice.actions;
 
 export default authSlice.reducer;

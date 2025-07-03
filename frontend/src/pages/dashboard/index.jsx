@@ -1,5 +1,7 @@
 import { getAboutUser } from "@/config/redux/action/authAction";
 import { getAllPosts } from "@/config/redux/action/postAction";
+import { setTokenIsPresent } from "@/config/redux/reducer/authReducer";
+import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -7,26 +9,21 @@ import { useDispatch, useSelector } from "react-redux";
 
 function Dashboard() {
   const router = useRouter();
-  const [isTokenPresent, setIsTokenPresent] = useState(false);
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (localStorage.getItem("token") === null) {
-      router.push("/login");
-    }
-    setIsTokenPresent(true);
-  });
-
-  useEffect(() => {
-    if (isTokenPresent) {
+    if (authState.isToken) {
       dispatch(getAllPosts());
       dispatch(getAboutUser({ token: localStorage.getItem("token") }));
     }
-  });
+  }, [authState.isToken]);
   return (
     <UserLayout>
-      {authState.profileFetched && <div>Hey,{authState.user.userId.name}</div>}
+      <DashboardLayout>
+        {" "}
+        <h1>Dashboard</h1>
+      </DashboardLayout>
     </UserLayout>
   );
 }

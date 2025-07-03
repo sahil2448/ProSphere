@@ -1,10 +1,14 @@
 import { useRouter } from "next/router";
 import React from "react";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function Navbar() {
-  // const authState = useSelector((state) => state.auth);
+  const authState = useSelector((state) => state.auth);
   const router = useRouter();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
   return (
     <div className="px-[2rem] h-[10vh]">
       <div className="flex justify-between items-center h-full">
@@ -16,19 +20,31 @@ function Navbar() {
         >
           Pro Sphere
         </h1>
-        {/* {authState.profileFetched && <div>Hello</div>} */}
-        {/* {!authState.profileFetched && ( */}
-        <div>
-          <div
-            onClick={() => {
-              router.push("/login");
-            }}
-            className="font-bold text-[15px] cursor-pointer border-2 p-2 rounded-md text-indigo-700 border-indigo-700 hover:bg-indigo-700 transition-all duration-200 hover:text-white"
-          >
-            Be a part
+        {authState.profileFetched && (
+          <div className="flex items-center gap-5">
+            {" "}
+            <div>Hey, {authState.user.userId.name}</div>
+            <p className="font-bold cursor-pointer">Profile</p>
+            <div
+              onClick={handleLogout}
+              className="bg-red-700 hover:bg-red-800 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
+            >
+              <p>Logout</p>
+            </div>
           </div>
-        </div>
-        {/* )} */}
+        )}
+        {!authState.profileFetched && (
+          <div>
+            <div
+              onClick={() => {
+                router.push("/login");
+              }}
+              className="font-bold text-[15px] cursor-pointer border-2 p-2 rounded-md text-indigo-700 border-indigo-700 hover:bg-indigo-700 transition-all duration-200 hover:text-white"
+            >
+              Be a part
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
