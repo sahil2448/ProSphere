@@ -23,7 +23,7 @@ function DashboardLayout({ children }) {
 
   const allUsers = authState.allUsers;
   const allFetched = authState.allProfilesFetched;
-  console.log(allUsers);
+  // console.log(allUsers);
 
   return (
     <div className="flex">

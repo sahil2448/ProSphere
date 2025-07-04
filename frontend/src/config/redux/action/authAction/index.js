@@ -6,7 +6,7 @@ const loginUser = createAsyncThunk("user/login", async (user, thunkAPI) => {
       email: user.email,
       password: user.password,
     });
-    console.log(response);
+    // console.log(response);
 
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
