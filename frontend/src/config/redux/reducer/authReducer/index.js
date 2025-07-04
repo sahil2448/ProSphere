@@ -6,7 +6,7 @@ import {
   registerUser,
 } from "../../action/authAction/index.js";
 const initialState = {
-  user: [],
+  user: undefined,
   isError: false,
   isLoading: false,
   isSuccess: false,

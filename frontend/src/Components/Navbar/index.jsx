@@ -1,13 +1,16 @@
+import { reset } from "@/config/redux/reducer/authReducer";
 import { useRouter } from "next/router";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Navbar() {
+  const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.push("/login");
+    // router.push("/login");
+    dispatch(reset());
   };
   return (
     <div className="px-[2rem] h-[10vh]">
