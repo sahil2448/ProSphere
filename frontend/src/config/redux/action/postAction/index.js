@@ -5,10 +5,10 @@ const getAllPosts = createAsyncThunk(
   "post/getAllPosts",
   async (_, thunkAPI) => {
     try {
-      const posts = await clientServer.get("/posts");
+      const response = await clientServer.get("/posts");
 
       if (response) {
-        return thunkAPI.fulfillWithValue(posts.data);
+        return thunkAPI.fulfillWithValue(response.data);
       }
     } catch (e) {
       return thunkAPI.rejectWithValue(e.response.data);
@@ -44,4 +44,25 @@ const createPost = createAsyncThunk(
   }
 );
 
-export { getAllPosts, createPost };
+const deletePost = createAsyncThunk(
+  "post/delete_post",
+  async ({ postId }, thunkAPI) => {
+    try {
+      const response = await clientServer.delete(`/delete_post`, {
+        params: {
+          token: localStorage.getItem("token"),
+          postId: postId,
+        },
+      });
+      if (response.status == 200) {
+        return thunkAPI.fulfillWithValue(response.data);
+      } else {
+        return thunkAPI.rejectWithValue("Post not deleted !");
+      }
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export { getAllPosts, createPost, deletePost };

@@ -2,6 +2,7 @@ import { reset } from "@/config/redux/reducer/authReducer";
 import { useRouter } from "next/router";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ function Navbar() {
     dispatch(reset());
   };
   return (
-    <div className="px-[2rem] h-[10vh]">
+    <div className="px-[2rem] h-[12vh] bg-white sticky top-0 ">
       <div className="flex justify-between items-center h-full">
         <h1
           className="text-2xl font-bold cursor-pointer"
@@ -28,12 +29,13 @@ function Navbar() {
             {" "}
             <div>Hey, {authState.user.userId.name}</div>
             <p className="font-bold cursor-pointer">Profile</p>
-            <div
+            <Button
+              variant="destructive"
               onClick={handleLogout}
-              className="bg-red-700 hover:bg-red-800 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
+              className="bg-red-700 hover:bg-red-800 w-fit h-fit px-3 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
             >
               <p>Logout</p>
-            </div>
+            </Button>
           </div>
         )}
         {!authState.profileFetched && (

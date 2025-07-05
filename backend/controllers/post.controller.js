@@ -52,7 +52,7 @@ const getAllPosts = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const { token, postId } = req.body;
+    const { token, postId } = req.query;
 
     const user = await User.findOne({ token }).select("_id");
     // .select("_id") is to only retrieve the _id field of the user document from the database, instead of fetching all user details.
@@ -72,11 +72,17 @@ const deletePost = async (req, res) => {
     }
 
     await Post.deleteOne({ _id: postId });
+    const allPosts = await Post.find().populate(
+      "userId",
+      "name username email profilePicture"
+    );
     // ANOTHER METHOD TO HANDLE DELETPOST...WITHOUT DELETING THE POST:
     // We will write:
     // await Post.updateOne({ _id: postId }, { active: false });
     // and render only those post whose active field is true.
-    return res.status(200).json({ message: "Post deleted successfully" });
+    return res
+      .status(200)
+      .json({ message: "Post deleted successfully", allPosts });
   } catch (e) {
     return res.status(500).json({ message: e.message });
   }

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllPosts } from "../../action/postAction";
+import { deletePost, getAllPosts } from "../../action/postAction";
 
 const initialState = {
   posts: [],
@@ -31,12 +31,17 @@ const postSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.postFetched = true;
-        state.posts = action.payload.allPosts;
+        state.posts = action.payload;
       })
       .addCase(getAllPosts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = "Post deleted";
+        state.posts = action.payload;
       });
   },
 });

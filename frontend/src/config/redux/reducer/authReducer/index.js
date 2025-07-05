@@ -83,6 +83,10 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.profileFetched = true;
       })
+      .addCase(getAllUserProfiles.pending, (state, action) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
       .addCase(getAllUserProfiles.fulfilled, (state, action) => {
         state.allUsers = action.payload.allUserProfile;
         state.isError = false;

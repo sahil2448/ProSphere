@@ -26,12 +26,12 @@ function DashboardLayout({ children }) {
   // console.log(allUsers);
 
   return (
-    <div className="flex">
-      <div className="w-[20%] flex flex-col justify-center ">
-        <div className="w-[80%] flex flex-col gap-2 justify-end self-end">
+    <div className="flex h-[90vh]">
+      <div className="w-[20%] flex flex-col justify-center">
+        <div className=" flex flex-col gap-2 justify-start ml-10 h-[90vh]">
           <div
             onClick={() => router.push("/dashboard")}
-            className="flex gap-2 text-[1.1rem] cursor-pointer hover:scale-105 items-center transition-all duration-200 "
+            className="flex gap-2 text-[1.1rem] h cursor-pointer hover:scale-105 items-center transition-all duration-200 "
           >
             <div className="h-[1.2em]">
               <svg
@@ -100,9 +100,11 @@ function DashboardLayout({ children }) {
           </div>
         </div>
       </div>
+      <div className="h-[80vh] w-px bg-gray-400 mx-6"></div>
       <div className="w-[60%]">{children}</div>
-      <div className="w-[20%]">
-        <h1>Top Profiles</h1>
+      <div className="h-[80vh] w-px bg-gray-400 mx-6"></div>
+      <div className="w-[20%] h-[90vh]">
+        <h1 className="font-bold text-lg">Top Profiles</h1>
         <div className="flex flex-col">
           {allFetched &&
             allUsers.map((person, idx) => {
