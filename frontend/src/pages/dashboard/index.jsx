@@ -73,7 +73,7 @@ function Dashboard() {
     return (
       <UserLayout>
         <DashboardLayout>
-          <ScrollArea className=" h-[90vh] w-[80%] mx-auto border-none rounded-md p-4">
+          <ScrollArea className=" h-[90vh] w-[96%] mx-auto border-none rounded-md p-4 px-20 bg-white">
             <div className="flex justify-center items-center gap-5 bg-indigo-700/10 px-5 py-3 rounded-lg">
               <div>
                 <img

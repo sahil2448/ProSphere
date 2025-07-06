@@ -1,12 +1,13 @@
 import { getAllUserProfiles } from "@/config/redux/action/authAction";
 import { setTokenIsPresent } from "@/config/redux/reducer/authReducer";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function DashboardLayout({ children }) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [activeSection, setActiveSection] = useState("");
   const authState = useSelector((state) => state.auth);
   useEffect(() => {
     if (localStorage.getItem("token") === null) {
@@ -14,6 +15,15 @@ function DashboardLayout({ children }) {
     }
     dispatch(setTokenIsPresent());
   });
+
+  useEffect(() => {
+    const path = router.pathname;
+    if (path.startsWith("/dashboard")) setActiveSection("dashboard");
+    else if (path.startsWith("/discover")) setActiveSection("discover");
+    else if (path.startsWith("/myConnections"))
+      setActiveSection("myConnections");
+    else setActiveSection("");
+  }, [router.pathname]);
 
   useEffect(() => {
     if (!authState.allProfilesFetched) {
@@ -26,14 +36,19 @@ function DashboardLayout({ children }) {
   // console.log(allUsers);
 
   return (
-    <div className="flex h-[90vh]">
-      <div className="w-[15%] flex flex-col justify-center">
-        <div className=" flex flex-col gap-2 justify-start ml-10 h-[90vh]">
+    <div className="flex h-[90vh] bg-gray-50">
+      <div className="w-[18%] flex flex-col justify-center bg-white">
+        <div className=" flex flex-col gap-2 justify-start  h-[90vh] ">
           <div
-            onClick={() => router.push("/dashboard")}
-            className="flex gap-2 text-[1.1rem] h cursor-pointer hover:scale-105 items-center transition-all duration-200 "
+            onClick={() => {
+              setActiveSection("dashboard");
+              router.push("/dashboard");
+            }}
+            className={`flex gap-2 text-[1.1rem] px-6 py-4 cursor-pointer hover:px-8 items-center transition-all duration-200 ${
+              activeSection === "dashboard" ? "bg-black text-white" : "bg-white"
+            }`}
           >
-            <div className="h-[1.2em]">
+            <div className="h-[1.2em] ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -53,8 +68,13 @@ function DashboardLayout({ children }) {
             <p> Scroll</p>
           </div>
           <div
-            onClick={() => router.push("/discover")}
-            className="flex gap-2 text-[1.1rem] cursor-pointer hover:scale-105 items-center transition-all duration-200"
+            onClick={() => {
+              setActiveSection("discover");
+              router.push("/discover");
+            }}
+            className={`flex gap-2 text-[1.1rem] px-6 py-4 cursor-pointer hover:px-8 items-center transition-all duration-200 ${
+              activeSection === "discover" ? "bg-black text-white" : "bg-white"
+            }`}
           >
             <div className="h-[1.2em]">
               <svg
@@ -76,8 +96,15 @@ function DashboardLayout({ children }) {
             <p> Discover</p>
           </div>
           <div
-            onClick={() => router.push("/myConnections")}
-            className="flex gap-2 text-[1.1rem] cursor-pointer hover:scale-105 items-center transition-all duration-200"
+            onClick={() => {
+              setActiveSection("myConnections");
+              router.push("/myConnections");
+            }}
+            className={`flex gap-2 text-[1.1rem] px-6 py-4 cursor-pointer hover:px-8  items-center transition-all duration-200 ${
+              activeSection === "myConnections"
+                ? "bg-black text-white"
+                : "bg-white"
+            }`}
           >
             <div className="h-[1.2em]">
               <svg
@@ -103,8 +130,8 @@ function DashboardLayout({ children }) {
       {/* <div className="h-[80vh] w-px bg-gray-400 mx-6"></div> */}
       <div className="w-[70%]">{children}</div>
       {/* <div className="h-[80vh] w-px bg-gray-400 mx-6"></div> */}
-      <div className="w-[15%] h-[90vh]">
-        <h1 className="font-bold text-lg">Top Profiles</h1>
+      <div className="w-[18%] h-[90vh] bg-white px-5 py-5">
+        <h1 className="font-bold text-lg ">Top Profiles</h1>
         <div className="flex flex-col">
           {allFetched &&
             allUsers.map((person, idx) => {

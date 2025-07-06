@@ -14,7 +14,7 @@ function Navbar() {
     dispatch(reset());
   };
   return (
-    <div className="px-[2rem] h-[10vh] bg-white sticky top-0 ">
+    <div className="px-[2rem] h-[8vh] bg-white sticky top-0 ">
       <div className="flex justify-between items-center h-full">
         <h1
           className="text-2xl font-bold cursor-pointer"
