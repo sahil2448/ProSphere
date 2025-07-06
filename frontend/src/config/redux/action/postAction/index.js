@@ -45,9 +45,10 @@ const createPost = createAsyncThunk(
 );
 
 const deletePost = createAsyncThunk(
-  "post/delete_post",
+  "/post/delete_post",
   async ({ postId }, thunkAPI) => {
     try {
+      console.log(postId);
       const response = await clientServer.delete(`/delete_post`, {
         params: {
           token: localStorage.getItem("token"),
@@ -65,4 +66,22 @@ const deletePost = createAsyncThunk(
   }
 );
 
-export { getAllPosts, createPost, deletePost };
+const incremetLikes = createAsyncThunk(
+  "/post/increment_likes",
+  async ({ post }, thunkAPI) => {
+    try {
+      console.log("from inc likes:", post._id);
+      const response = await clientServer.post("/increment_likes", {
+        params: {
+          postId: post._id,
+        },
+      });
+
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export { getAllPosts, createPost, deletePost, incremetLikes };

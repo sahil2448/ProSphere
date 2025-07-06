@@ -59,9 +59,10 @@ const deletePost = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     const post = await Post.findOne({ _id: postId });
     if (!post) {
+      console.log("postid from backend", postId, "token:", token);
+
       return res.status(404).json({ message: "Post not found" });
     }
 
@@ -128,8 +129,9 @@ const deleteCommentOfUser = async (req, res) => {
 };
 
 const incremetLikes = async (req, res) => {
-  const { postId } = req.body;
+  const { postId } = req.body.params;
   try {
+    console.log(req.body);
     const post = await Post.findOne({ _id: postId });
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

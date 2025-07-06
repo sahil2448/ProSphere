@@ -4,6 +4,7 @@ import UserLayout from "@/layout/UserLayout";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 function index() {
   const authState = useSelector((state) => state.auth);
@@ -11,6 +12,7 @@ function index() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [tst, setTst] = useState(false);
   const [password, setPassword] = useState("");
   const [checkSignUpFields, setCheckSignUpFields] = useState(false);
   const [checkLoginFields, setCheckLoginFields] = useState(false);
@@ -27,8 +29,31 @@ function index() {
         password,
       })
     );
+    setTst(true);
     // setUserLoginMethod(true);
   };
+
+  useEffect(() => {
+    // if (
+    //   tst &&
+    //   authState.message.message ===
+    //     "You are registered successfully! Please login"
+    // )
+    {
+      toast("User Register Successfully!", {
+        action: {
+          label: "X",
+          onClick: () => console.log("X"),
+        },
+        style: {
+          background: "rgb(220 252 231)", // Indigo
+          color: "rgb(21 128 61)",
+          opacity: "1",
+          border: " rgb(21 128 61)",
+        },
+      });
+    }
+  }, [tst, authState.message.message]);
 
   const handleLogin = () => {
     console.log("Logging in...");
@@ -79,6 +104,7 @@ function index() {
             >
               {authState.message.message}
             </p>
+
             <div className="flex flex-col gap-5 mt-10 min-w-[55%] max-w-[100%]">
               {!UserLoginMethod && (
                 <div className="flex flex-col lg:flex-row gap-2">

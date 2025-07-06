@@ -27,7 +27,7 @@ export default function Home() {
               </p>
               <div
                 onClick={() => routeTo.push("/login")}
-                className="bg-indigo-700 hover:bg-indigo-900 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
+                className="bg-indigo-900 hover:bg-indigo-950 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
               >
                 <p>Join now</p>
               </div>

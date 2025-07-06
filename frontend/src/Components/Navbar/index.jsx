@@ -14,7 +14,7 @@ function Navbar() {
     dispatch(reset());
   };
   return (
-    <div className="px-[2rem] h-[12vh] bg-white sticky top-0 ">
+    <div className="px-[2rem] h-[10vh] bg-white sticky top-0 ">
       <div className="flex justify-between items-center h-full">
         <h1
           className="text-2xl font-bold cursor-pointer"
@@ -41,12 +41,13 @@ function Navbar() {
         {!authState.profileFetched && (
           <div>
             <div
+              // variant="secondary"
               onClick={() => {
                 router.push("/login");
               }}
-              className="font-bold text-[15px] cursor-pointer border-2 p-2 rounded-md text-indigo-700 border-indigo-700 hover:bg-indigo-700 transition-all duration-200 hover:text-white"
+              className="bg-indigo-900 hover:bg-indigo-950 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
             >
-              Be a part
+              <p> Be a part</p>
             </div>
           </div>
         )}

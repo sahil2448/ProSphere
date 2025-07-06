@@ -27,7 +27,7 @@ function DashboardLayout({ children }) {
 
   return (
     <div className="flex h-[90vh]">
-      <div className="w-[20%] flex flex-col justify-center">
+      <div className="w-[15%] flex flex-col justify-center">
         <div className=" flex flex-col gap-2 justify-start ml-10 h-[90vh]">
           <div
             onClick={() => router.push("/dashboard")}
@@ -100,10 +100,10 @@ function DashboardLayout({ children }) {
           </div>
         </div>
       </div>
-      <div className="h-[80vh] w-px bg-gray-400 mx-6"></div>
-      <div className="w-[60%]">{children}</div>
-      <div className="h-[80vh] w-px bg-gray-400 mx-6"></div>
-      <div className="w-[20%] h-[90vh]">
+      {/* <div className="h-[80vh] w-px bg-gray-400 mx-6"></div> */}
+      <div className="w-[70%]">{children}</div>
+      {/* <div className="h-[80vh] w-px bg-gray-400 mx-6"></div> */}
+      <div className="w-[15%] h-[90vh]">
         <h1 className="font-bold text-lg">Top Profiles</h1>
         <div className="flex flex-col">
           {allFetched &&
