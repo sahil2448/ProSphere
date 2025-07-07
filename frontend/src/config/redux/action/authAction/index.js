@@ -40,6 +40,7 @@ const registerUser = createAsyncThunk(
   }
 );
 
+
 //Passing the token in params ensures the backend receives it in the expected format/location, allowing it to authenticate and authorize the request properly. If your backend expects the token in headers, you should use the Authorization header instead. Always match your frontend request format to your backend's requirements.
 const getAboutUser = createAsyncThunk(
   "user/get_user_and_profile",
