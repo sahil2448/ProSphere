@@ -69,3 +69,12 @@ content-type: application/json
     "token":"f53a037a32a16bfefc4ee7f66ae66f42739e359592b14473d03cfd8c100e9874",
     "postId":"685ce693f95a8d69dc14d608"
 }
+
+
+###
+GET http://localhost:9090/user/getProfileUsingUsername HTTP/1.1
+content-type: application/json
+
+{
+    "username":"sk2448"
+}
