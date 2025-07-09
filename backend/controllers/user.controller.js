@@ -7,6 +7,7 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import ConnectionRequest from "../models/connections.model.js";
 import Comment from "../models/comments.model.js";
+import Post from "../models/posts.model.js";
 
 const convertUserDataToPDF = async (userData) => {
   const doc = new PDFDocument();
@@ -71,7 +72,6 @@ const Login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      console.log("backend side login");
       return res.status(400).json({ message: "All fields are requires !" });
     }
 
@@ -145,7 +145,6 @@ const updateUserProfile = async (req, res) => {
 
 const getUserAndProfle = async (req, res) => {
   try {
-    console.log("This is request.body", req.body);
     const { token } = req.query;
     const user = await User.findOne({ token });
     if (!user) {
@@ -320,33 +319,7 @@ const acceptConnectionRequest = async (req, res) => {
   } catch (error) {}
 };
 
-const commentPost = async (req, res) => {
-  const { token, postId, commentBody } = req.body;
-  try {
-    const user = await User.findOne({ token });
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const post = await Post.findOne({ _id: postId });
-
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-    const comment = new Comment({
-      userId: user._id,
-      postId: post._id,
-      comment: commentBody,
-    });
-
-    await comment.save();
-    return res.status(200).json({ message: "Comment added successfully" });
-  } catch (e) {
-    return res.status(500).json({ message: e.message });
-  }
-};
 
 export {
   register,
@@ -361,5 +334,4 @@ export {
   getMyConnectionsRequests,
   whatAreMyConnections,
   acceptConnectionRequest,
-  commentPost,
 };

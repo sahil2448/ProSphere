@@ -6,9 +6,21 @@ import {
 import {
   createPost,
   deletePost,
+  getAllComments,
   getAllPosts,
   incremetLikes,
+  postComment,
 } from "@/config/redux/action/postAction";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { setTokenIsPresent } from "@/config/redux/reducer/authReducer";
 import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
@@ -20,6 +32,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/Components/ui/input";
 
 function Dashboard() {
   const router = useRouter();
@@ -28,14 +41,16 @@ function Dashboard() {
   const postState = useSelector((state) => state.postReducer);
   const [buttonTriggered, setButtonTriggered] = useState(false);
   const [postContent, setPostContent] = useState("");
-  const [fileContent, setFileContent] = useState();
+  const [fileContent, setFileContent] = useState("");
   const [likeActive, setLikeActive] = useState(false);
+  const [commentText, setCommentText] = useState("");
 
   const handlePostUpload = async () => {
     await dispatch(createPost({ file: fileContent, body: postContent }));
     setFileContent(null);
     setPostContent("");
     setButtonTriggered(!buttonTriggered);
+    setFileContent("");
   };
 
   const handleDeletePost = async (post) => {
@@ -73,69 +88,105 @@ function Dashboard() {
     return (
       <UserLayout>
         <DashboardLayout>
-          <ScrollArea className=" h-[90vh] w-[96%] mx-auto border-none rounded-md p-4 px-20 bg-white">
-            <div className="flex justify-center items-center gap-5 bg-indigo-700/10 px-5 py-3 rounded-lg">
+          <ScrollArea className=" h-[90vh] w-[100%] mx-auto border-none rounded-md pt-4 px-10 ">
+            <div className="flex w-[100%] items-start gap-5 bg-white border-2 px-5 py-3 rounded-lg">
               <div>
                 <img
                   src={`${BASE_URL}/${authState.user.userId.profilePicture}`}
                   alt=""
-                  className="w-[4rem] rounded-full"
+                  className="w-[4rem] border-1 rounded-full"
                 />
               </div>
-              <textarea
-                name="text"
-                className="w-full bg-white rounded-lg flex border-2 items-center justify-center p-2 min-h-16"
-                id="text"
-                placeholder="What's in your mind ?"
-                onChange={(e) => setPostContent(e.target.value)}
-                value={postContent}
-              ></textarea>
-              <div className="flex items-center gap-2">
-                <label htmlFor="uploadFile" className="cursor-pointer ">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="white"
-                    className="size-7 bg-sky-700 rounded-full"
+              <div className="w-full flex flex-col gap-5">
+                <textarea
+                  name="text"
+                  className="w-[100%] bg-gray-100 rounded-lg flex border-2 items-center justify-center p-2 min-h-20"
+                  id="text"
+                  placeholder="What's in your mind ?"
+                  onChange={(e) => setPostContent(e.target.value)}
+                  value={postContent}
+                ></textarea>
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-2">
+                    <label htmlFor="uploadFile" className="cursor-pointer ">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="white"
+                        className="size-8 p-1 bg-black  rounded-full"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                      <input
+                        type="file"
+                        onChange={(e) => setFileContent(e.target.files[0])}
+                        hidden
+                        id="uploadFile"
+                      />
+                    </label>
+                    {fileContent !== "" ? (
+                      <div className="flex border-2 gap-2 justify-center items-center border-black rounded-xl px-3  bg-gray-100">
+                        <div>File Attached</div>
+                        <button
+                          onClick={() => setFileContent("")}
+                          className="cursor-pointer"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-5"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={
+                      postContent.length !== 0 || fileContent !== ""
+                        ? handlePostUpload
+                        : undefined
+                    }
+                    className={`cursor-pointer transition-all duration-500 ${
+                      postContent.length != 0 || fileContent !== ""
+                        ? "bg-gray-800 text-white"
+                        : "bg-gray-100 text-gray-400"
+                    }  px-5 py-1  rounded-sm `}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                  <input
-                    type="file"
-                    onChange={(e) => setFileContent(e.target.files[0])}
-                    hidden
-                    id="uploadFile"
-                  />
-                </label>
-                <button
-                  onClick={handlePostUpload}
-                  className={`cursor-pointer transition-all duration-700 ${
-                    postContent.length != 0 ? "visible" : "hidden"
-                  } bg-sky-700 px-2 py-1 text-white rounded-sm `}
-                >
-                  Post
-                </button>
+                    Post
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col h-full gap-5 mt-5">
+            <div className="flex flex-col h-full gap-5 mt-5 pb-3">
               {posts.map((post, idx) => {
                 return (
                   <div
                     key={post._id || idx}
-                    className="flex flex-col gap-2 px-3"
+                    className="flex flex-col gap-2 justify-start bg-white p-5 px-7 rounded-lg border-2"
                   >
                     <div className="flex items-start gap-5 justify-start">
                       <img
                         src={`${BASE_URL}/${post.userId.profilePicture}`}
                         alt=""
-                        width={"9%"}
-                        className="rounded-full"
+                        className="w-[4rem] border-1 rounded-full"
                       />
                       <div className="flex justify-between w-full">
                         <div>
@@ -151,7 +202,7 @@ function Dashboard() {
                           >
                             <Button
                               variant="outline"
-                              className="text-red-800 cursor-pointer border-red-800 "
+                              className="text-red-600 cursor-pointer border-red-600 hover:text-red-700"
                               onClick={() =>
                                 toast("Post has been deleted successfully!", {
                                   action: {
@@ -167,7 +218,7 @@ function Dashboard() {
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
-                                className="size-6"
+                                className="size-5"
                               >
                                 <path
                                   strokeLinecap="round"
@@ -190,6 +241,8 @@ function Dashboard() {
                         />
                       )}
                     </div>
+                    <hr />
+
                     <div className="flex justify-evenly">
                       <Button
                         variant={`${"ghost"}`}
@@ -216,22 +269,98 @@ function Dashboard() {
                         </svg>
                         {post.likes}
                       </Button>
-                      <Button variant="ghost" className="cursor-pointer">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="size-6"
+                      {/* <Button> */}
+                      <Dialog variant="ghost" className="cursor-pointer ">
+                        <DialogTrigger
+                          asChild
+                          onClick={async () =>
+                            await dispatch(getAllComments({ post }))
+                          }
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
-                          />
-                        </svg>
-                      </Button>
+                          <Button variant="outline">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                              />
+                            </svg>
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[500px] max-h-[80vh] min-h-[60vh] ">
+                          <DialogHeader className="h-[60vh] ">
+                            <DialogTitle>
+                              {postState.comments.length === 0
+                                ? "No Comments"
+                                : "Comments"}
+                            </DialogTitle>
+                            <DialogDescription className="absolute top-14 overflow-y-scroll w-[90%] h-[75%]">
+                              <div>
+                                {
+                                  <div className="flex flex-col gap-5">
+                                    {postState.comments.map((comment, idx) => {
+                                      return (
+                                        <div key={idx}>
+                                          <div className="flex">
+                                            <img
+                                              src={`${BASE_URL}/${post.userId.profilePicture}`}
+                                              alt=""
+                                              className="rounded-full h-[40px]"
+                                            />
+                                            <div>
+                                              <p className="font-bold text-black">
+                                                {comment.userId.name}
+                                              </p>
+                                              <p className="text-black">
+                                                @{comment.userId.username}
+                                              </p>
+                                              <p className="text-black">
+                                                {comment.body}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                }
+                              </div>
+                            </DialogDescription>
+                            <DialogFooter className="w-[90%] absolute bottom-2">
+                              <Input
+                                placeholder="Write your comment"
+                                onChange={(e) => setCommentText(e.target.value)}
+                                value={commentText}
+                                className="bg-white"
+                              ></Input>
+                              <Button
+                                type="submit"
+                                onClick={async () => {
+                                  await dispatch(
+                                    postComment({
+                                      post,
+                                      comment_body: commentText,
+                                    })
+                                  );
+                                  await dispatch(getAllComments({ post }));
+                                  setCommentText("");
+                                }}
+                              >
+                                Comment
+                              </Button>
+                            </DialogFooter>
+                          </DialogHeader>
+                          {/* <div className="grid gap-4"></div> */}
+                        </DialogContent>
+                      </Dialog>
+                      {/* </Button> */}
                       <Button variant="ghost" className="cursor-pointer">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -249,7 +378,6 @@ function Dashboard() {
                         </svg>
                       </Button>
                     </div>
-                    <hr />
                   </div>
                 );
               })}

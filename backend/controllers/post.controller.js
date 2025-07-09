@@ -1,3 +1,4 @@
+import Comment from "../models/comments.model.js";
 import Post from "../models/posts.model.js";
 import User from "../models/users.model.js";
 
@@ -89,20 +90,6 @@ const deletePost = async (req, res) => {
   }
 };
 
-const getCommentByPost = async (req, res) => {
-  const { postId } = req.body;
-  try {
-    const post = await Post.findOne({ _id: postId });
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-    return res.json({ comments: post.comments });
-  } catch (e) {
-    return res.status(500).json({ message: e.message });
-  }
-};
-
 const deleteCommentOfUser = async (req, res) => {
   const { token, commentId } = req.body;
   try {
@@ -131,7 +118,6 @@ const deleteCommentOfUser = async (req, res) => {
 const incremetLikes = async (req, res) => {
   const { postId } = req.body.params;
   try {
-    console.log(req.body);
     const post = await Post.findOne({ _id: postId });
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -145,11 +131,62 @@ const incremetLikes = async (req, res) => {
   }
 };
 
+const commentPost = async (req, res) => {
+  const { token, postId, comment_body } = req.body;
+  try {
+    console.log("backend check:", { token, postId, comment_body });
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const post = await Post.findOne({ _id: postId });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const commentData = new Comment({
+      userId: user._id,
+      postId: postId,
+      body: comment_body,
+    });
+
+    await commentData.save();
+
+    return res.status(200).json({ message: "comment added" });
+  } catch (e) {
+    return res.status(500).json({ message: e.message });
+  }
+};
+
+const getCommentByPost = async (req, res) => {
+  const { postId } = req.query;
+  console.log("from backend:", postId);
+
+  try {
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const allComments = await Comment.find({ postId }).populate(
+      "userId",
+      "username name"
+    );
+    return res.json(allComments);
+  } catch (e) {
+    return res.status(500).json({ message: e.message });
+  }
+};
+
 export {
   activeCheck,
   createPost,
   getAllPosts,
   deletePost,
+  commentPost,
   getCommentByPost,
   deleteCommentOfUser,
   incremetLikes,

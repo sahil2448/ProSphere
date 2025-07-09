@@ -7,9 +7,9 @@ import {
   getCommentByPost,
   deleteCommentOfUser,
   incremetLikes,
+  commentPost,
 } from "../controllers/post.controller.js";
 import multer from "multer";
-import { commentPost } from "../controllers/user.controller.js";
 
 const router = Router();
 

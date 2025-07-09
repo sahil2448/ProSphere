@@ -185,8 +185,10 @@ function DashboardLayout({ children }) {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-          <main className="flex-1 overflow-auto">
-            <div className="h-full p-6">{children}</div>
+          <main className="flex-1 px-10">
+            <div className="h-full  border-r border-l border-gray-200">
+              {children}
+            </div>
           </main>
 
           {/* Right Sidebar - Top Profiles */}

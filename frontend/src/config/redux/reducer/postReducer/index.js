@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deletePost, getAllPosts } from "../../action/postAction";
+import {
+  deletePost,
+  getAllComments,
+  getAllPosts,
+} from "../../action/postAction";
 
 const initialState = {
   posts: [],
@@ -42,6 +46,10 @@ const postSlice = createSlice({
         state.isLoading = false;
         state.message = "Post deleted";
         state.posts = action.payload;
+      })
+      .addCase(getAllComments.fulfilled, (state, action) => {
+        state.comments = action.payload;
+        // state.postId = action.payload.postId;
       });
   },
 });

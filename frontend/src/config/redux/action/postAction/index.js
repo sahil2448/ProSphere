@@ -84,4 +84,46 @@ const incremetLikes = createAsyncThunk(
   }
 );
 
-export { getAllPosts, createPost, deletePost, incremetLikes };
+const getAllComments = createAsyncThunk(
+  "post/get_comment_by_post",
+  async ({ post }, thunkAPI) => {
+    try {
+      console.log(post._id);
+      const response = await clientServer.get("/get_comment_by_post", {
+        params: {
+          postId: post._id,
+        },
+      });
+
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+const postComment = createAsyncThunk(
+  "post/comment",
+  async ({ post, comment_body }, thunkAPI) => {
+    console.log("frontend check:", comment_body);
+    try {
+      const response = await clientServer.post("/comment_post", {
+        token: localStorage.getItem("token"),
+        postId: post._id,
+        comment_body,
+      });
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export {
+  getAllPosts,
+  createPost,
+  deletePost,
+  incremetLikes,
+  getAllComments,
+  postComment,
+};
