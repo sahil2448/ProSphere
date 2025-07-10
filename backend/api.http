@@ -31,8 +31,8 @@ POST http://localhost:9090/user/update_profile_data HTTP/1.1
 content-type: application/json
 
 {
-    "token":"a3991b70cc06f8564ae14724dd30e4674e3268820652aef50e453dcdaf60fe81",
-    "bio":"Bahubali",
+    "token":"34858f7ea1a1eb46781742e03085abe193b2eb3584d7540aaf6e750b3f7c4cbc",
+    "bio":"Hii I am sahil yuvraj kamble",
     "currentPost":"Maharaja",
     "pastWork":[
         {

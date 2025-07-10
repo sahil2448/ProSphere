@@ -1,31 +1,106 @@
 import { BASE_URL, clientServer } from "@/config";
 import UserLayout from "@/layout/UserLayout";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/layout/DashboardLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllPosts } from "@/config/redux/action/postAction";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 
 function viewProfilePage({ userProfile }) {
-  useEffect(() => {
-    console.log("viewProfilePage");
-  });
+  // useEffect(() => {
+  //   console.log("viewProfilePage");
+  // });
+  const [userPosts, setUserPosts] = useState([]);
+
+  const dispatch = useDispatch();
+
   const searchParams = useSearchParams();
 
+  const postState = useSelector((state) => state.postReducer);
+
+  const authState = useSelector((state) => state.auth);
+
+  const [isCurrentUserInConnection, setIsCurrentUserInConnection] =
+    useState(false);
+
+  useEffect(async () => {
+    await dispatch(getAllPosts());
+    // await dispatch(
+    //   getConnectionRequests({ token: localStorage.getItem("token") })
+    // );
+  }, []);
+
+  useEffect(() => {
+    let posts = postState.posts.allPosts;
+    // filter((post) => {
+    //   return authState.userId._id === post.userId._id;
+    // });
+
+    setUserPosts(posts);
+  }, [postState.posts.allPosts]);
+
+  useEffect(() => {
+    if (
+      authState.connections.some(
+        (user) => user.connectionId._id === userProfile.userId._id
+      )
+    ) {
+      setIsCurrentUserInConnection(true);
+    }
+  }, [authState.connections]);
   return (
     <UserLayout>
       <DashboardLayout>
-        <div>
+        <div className="h-[100vh] relative p-5 ">
           {" "}
-          <div className="px-5 relative">
+          <div className="">
             <img
               src="https://images.pexels.com/photos/164175/pexels-photo-164175.jpeg"
               alt=""
-              className="object-cover h-[30vh] w-full"
+              className="object-cover h-[27vh] w-full rounded-lg"
             />
             <img
               src={`${BASE_URL}/${userProfile.userId.profilePicture}`}
               alt=""
-              className="w-20 h-20 absolute bottom-10 left-0"
+              className="w-[6em] h-[6em] absolute top-36 left-16 rounded-full bg-black"
             />
+          </div>
+          <div className="flex pt-10 w-full">
+            <div className="w-[70%]">
+              {" "}
+              <div className="flex gap-4">
+                <p className="font-bold ">{userProfile.userId.name}</p>
+                <p>@{userProfile.userId.username}</p>
+              </div>
+              <div>
+                {isCurrentUserInConnection ? (
+                  <button>Connected</button>
+                ) : (
+                  <button>connect</button>
+                )}
+              </div>
+              <div>
+                <p>{userProfile.bio}</p>
+              </div>
+            </div>
+            <div className="w-[30%] flex flex-col gap-5">
+              <p className="font-bold">Recent Activity</p>
+              <ScrollArea className=" px-3 border-none rounded-sm w-full h-[90%]">
+                <div className="flex flex-col gap-5 pt-3">
+                  {(userPosts || []).map((post, idx) => (
+                    <div key={idx} className="flex gap-2 items-start">
+                      <img
+                        src={`${BASE_URL}/${post.media}`}
+                        alt=""
+                        className="w-10 h-10"
+                      />
+                      <p className="text-sm">{post.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
           </div>
         </div>
       </DashboardLayout>
