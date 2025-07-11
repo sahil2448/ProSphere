@@ -43,7 +43,7 @@ router.route("/update_profile_data").post(updateProfileData);
 router.route("/get_All_Users").get(getAllUserProfile);
 router.route("/getProfileUsingUsername").get(getProfileUsingUsername);
 router.route("/download_resume").get(downloadProfile);
-router.route("/send_connection_request").get(sendConnectionRequest);
+router.route("/send_connection_request").post(sendConnectionRequest);
 router.route("/getConnectionRequests").get(getMyConnectionsRequests);
 router.route("/user_connection_request").get(whatAreMyConnections);
 router.route("/accept_connection_request").get(acceptConnectionRequest);

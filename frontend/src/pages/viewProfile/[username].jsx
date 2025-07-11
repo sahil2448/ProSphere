@@ -6,6 +6,11 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import { ScrollArea } from "@/Components/ui/scroll-area";
+import {
+  getMyConnectionsRequests,
+  sendConnectionRequest,
+} from "@/config/redux/action/authAction";
+import { Button } from "@/Components/ui/button";
 
 function viewProfilePage({ userProfile }) {
   // useEffect(() => {
@@ -26,9 +31,9 @@ function viewProfilePage({ userProfile }) {
 
   useEffect(async () => {
     await dispatch(getAllPosts());
-    // await dispatch(
-    //   getConnectionRequests({ token: localStorage.getItem("token") })
-    // );
+    await dispatch(
+      getMyConnectionsRequests({ token: localStorage.getItem("token") })
+    );
   }, []);
 
   useEffect(() => {
@@ -77,7 +82,18 @@ function viewProfilePage({ userProfile }) {
                 {isCurrentUserInConnection ? (
                   <button>Connected</button>
                 ) : (
-                  <button>connect</button>
+                  <Button
+                    onClick={async () => {
+                      await dispatch(
+                        sendConnectionRequest({
+                          token: localStorage.getItem("token"),
+                          userId: userProfile.userId._id,
+                        })
+                      );
+                    }}
+                  >
+                    connect
+                  </Button>
                 )}
               </div>
               <div>

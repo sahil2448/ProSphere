@@ -40,7 +40,6 @@ const registerUser = createAsyncThunk(
   }
 );
 
-
 //Passing the token in params ensures the backend receives it in the expected format/location, allowing it to authenticate and authorize the request properly. If your backend expects the token in headers, you should use the Authorization header instead. Always match your frontend request format to your backend's requirements.
 const getAboutUser = createAsyncThunk(
   "user/get_user_and_profile",
@@ -70,4 +69,85 @@ const getAllUserProfiles = createAsyncThunk(
   }
 );
 
-export { loginUser, registerUser, getAboutUser, getAllUserProfiles };
+const sendConnectionRequest = createAsyncThunk(
+  "user/send_connection_request",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.post("user/send_connection_request", {
+        params: {
+          token: user.token,
+          connectionId: user.userId,
+        },
+      });
+
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+const getConnectionRequest = createAsyncThunk(
+  "user/getConnectionRequests",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.post("user/getConnectionRequests", {
+        params: {
+          token: user.token,
+        },
+      });
+      return thunkAPI.fulfillWithValue(response.data.connections);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+const getMyConnectionsRequests = createAsyncThunk(
+  "user/user_connection_request",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.get("user/user_connection_request", {
+        params: {
+          token: user.token,
+        },
+      });
+      return thunkAPI.fulfillWithValue(response.data.connections);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+const AcceptConnection = createAsyncThunk(
+  "user/accept_connection_request",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.get(
+        "user/accept_connection_request",
+        {
+          params: {
+            token: user.token,
+            connection_id: user.connectionId,
+            action_type: user.action,
+          },
+        }
+      );
+
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.response.data.message);
+    }
+  }
+);
+
+export {
+  loginUser,
+  registerUser,
+  getAboutUser,
+  getAllUserProfiles,
+  sendConnectionRequest,
+  getConnectionRequest,
+  getMyConnectionsRequests,
+  AcceptConnection,
+};

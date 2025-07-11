@@ -232,7 +232,7 @@ const downloadProfile = async (req, res) => {
 
 const sendConnectionRequest = async (req, res) => {
   try {
-    const { token, connectionId } = req.body; // token will be used to find the user...and connection id will be used to find the connection-user
+    const { token, connectionId } = req.query; // token will be used to find the user...and connection id will be used to find the connection-user
 
     const user = await User.findOne({ token });
     if (!user) {
@@ -296,7 +296,7 @@ const getMyConnectionsRequests = async (req, res) => {
 };
 
 const whatAreMyConnections = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.query;
   try {
     const user = await User.findOne({ token });
 
