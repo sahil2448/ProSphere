@@ -232,8 +232,7 @@ const downloadProfile = async (req, res) => {
 
 const sendConnectionRequest = async (req, res) => {
   try {
-    const { token, connectionId } = req.query; // token will be used to find the user...and connection id will be used to find the connection-user
-
+    const { token, connectionId } = req.body; // token will be used to find the user...and connection id will be used to find the connection-user
     const user = await User.findOne({ token });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -252,11 +251,11 @@ const sendConnectionRequest = async (req, res) => {
       connectionId: connectionUser._id,
     });
 
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "Connection request already sent" });
-    }
+    // if (existingUser) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Connection request already sent" });
+    // }
 
     const request = new ConnectionRequest({
       userId: user._id,
@@ -264,6 +263,8 @@ const sendConnectionRequest = async (req, res) => {
     });
 
     await request.save();
+
+    return res.json({ message: "Connection request sent successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

@@ -73,11 +73,12 @@ const sendConnectionRequest = createAsyncThunk(
   "user/send_connection_request",
   async (user, thunkAPI) => {
     try {
+      console.log(user);
       const response = await clientServer.post("user/send_connection_request", {
-        params: {
-          token: user.token,
-          connectionId: user.userId,
-        },
+        // params: {
+        token: user.token,
+        connectionId: user.connectionId,
+        // },
       });
 
       return thunkAPI.fulfillWithValue(response.data);
@@ -91,7 +92,7 @@ const getConnectionRequest = createAsyncThunk(
   "user/getConnectionRequests",
   async (user, thunkAPI) => {
     try {
-      const response = await clientServer.post("user/getConnectionRequests", {
+      const response = await clientServer.get("user/getConnectionRequests", {
         params: {
           token: user.token,
         },

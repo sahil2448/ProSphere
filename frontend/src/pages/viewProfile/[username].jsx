@@ -11,11 +11,14 @@ import {
   sendConnectionRequest,
 } from "@/config/redux/action/authAction";
 import { Button } from "@/Components/ui/button";
+import { useRouter } from "next/router";
 
 function viewProfilePage({ userProfile }) {
   // useEffect(() => {
   //   console.log("viewProfilePage");
   // });
+
+  const router = useRouter();
   const [userPosts, setUserPosts] = useState([]);
 
   const dispatch = useDispatch();
@@ -29,31 +32,44 @@ function viewProfilePage({ userProfile }) {
   const [isCurrentUserInConnection, setIsCurrentUserInConnection] =
     useState(false);
 
-  useEffect(async () => {
+  const getUserPosts = async () => {
     await dispatch(getAllPosts());
     await dispatch(
       getMyConnectionsRequests({ token: localStorage.getItem("token") })
     );
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getUserPosts();
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
-    let posts = postState.posts.allPosts;
-    // filter((post) => {
-    //   return authState.userId._id === post.userId._id;
-    // });
+    let posts = Array.isArray(postState.posts.allPosts)
+      ? postState.posts.allPosts.filter((post) => {
+          return post.userId.username === router.query.username;
+        })
+      : [];
 
     setUserPosts(posts);
-  }, [postState.posts.allPosts]);
+  }, [postState.posts.allPosts, router.query.username]);
 
   useEffect(() => {
     if (
+      Array.isArray(authState.connections) &&
       authState.connections.some(
         (user) => user.connectionId._id === userProfile.userId._id
       )
     ) {
       setIsCurrentUserInConnection(true);
+    } else {
+      setIsCurrentUserInConnection(false);
     }
-  }, [authState.connections]);
+  }, [authState.connections, userProfile.userId._id]);
+
+  // console.log(isCurrentUserInConnection);
   return (
     <UserLayout>
       <DashboardLayout>
@@ -80,14 +96,20 @@ function viewProfilePage({ userProfile }) {
               </div>
               <div>
                 {isCurrentUserInConnection ? (
-                  <button>Connected</button>
+                  <Button>Connected</Button>
                 ) : (
                   <Button
                     onClick={async () => {
                       await dispatch(
                         sendConnectionRequest({
                           token: localStorage.getItem("token"),
-                          userId: userProfile.userId._id,
+                          connectionId: userProfile.userId._id,
+                        })
+                      );
+                      // Refetch connections to update state
+                      await dispatch(
+                        getMyConnectionsRequests({
+                          token: localStorage.getItem("token"),
                         })
                       );
                     }}
@@ -100,12 +122,15 @@ function viewProfilePage({ userProfile }) {
                 <p>{userProfile.bio}</p>
               </div>
             </div>
-            <div className="w-[30%] flex flex-col gap-5">
+            <div className="w-[30%] flex flex-col gap-5 ">
               <p className="font-bold">Recent Activity</p>
-              <ScrollArea className=" px-3 border-none rounded-sm w-full h-[90%]">
-                <div className="flex flex-col gap-5 pt-3">
+              <ScrollArea className="h-[70%] w-[100%]  border-1 border-black rounded-md  ">
+                <div className="flex flex-col gap-5 pt-3 bg-white">
                   {(userPosts || []).map((post, idx) => (
-                    <div key={idx} className="flex gap-2 items-start">
+                    <div
+                      key={idx}
+                      className="flex gap-2 items-start hover:bg-gray-100 p-2 px-5 cursor-pointer"
+                    >
                       <img
                         src={`${BASE_URL}/${post.media}`}
                         alt=""

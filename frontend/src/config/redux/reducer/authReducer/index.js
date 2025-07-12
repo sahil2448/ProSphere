@@ -6,6 +6,7 @@ import {
   getMyConnectionsRequests,
   loginUser,
   registerUser,
+  sendConnectionRequest,
 } from "../../action/authAction/index.js";
 const initialState = {
   user: undefined,
@@ -94,6 +95,10 @@ const authSlice = createSlice({
         state.isError = false;
         state.allProfilesFetched = true;
         state.isLoading = false;
+      })
+      .addCase(sendConnectionRequest.fulfilled, (state, action) => {
+        state.message = "Connection request sent successfully";
+        state.connections = action.payload;
       })
       .addCase(getConnectionRequest.fulfilled, (state, action) => {
         state.connections = action.payload;
