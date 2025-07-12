@@ -272,8 +272,9 @@ const sendConnectionRequest = async (req, res) => {
 
 const getMyConnectionsRequests = async (req, res) => {
   // mere send kiye hue connectionRequests
-  const { token } = req.body;
+
   try {
+    const { token } = req.query;
     const user = await User.findOne({ token });
 
     if (!user) {

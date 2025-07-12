@@ -85,7 +85,7 @@ function DashboardLayout({ children }) {
               <Button
                 key={item.id}
                 variant={isActive ? "default" : "ghost"}
-                className={`w-full justify-start gap-3 h-12 text-base font-medium transition-all duration-200 ${
+                className={`w-full cursor-pointer justify-start gap-3 h-12 text-base font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-black text-white hover:bg-gray-800"
                     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -103,14 +103,14 @@ function DashboardLayout({ children }) {
   );
 
   const TopProfiles = () => (
-    <Card className="h-full border-0 shadow-sm">
-      <CardHeader className="pb-4">
+    <Card className="h-full border-0 shadow-sm ">
+      <CardHeader className="">
         <CardTitle className="text-lg font-bold text-gray-900">
           Top Profiles
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <ScrollArea className="h-[calc(100vh-8rem)]">
+        <ScrollArea className="h-[calc(100vh-10rem)]">
           <div className="space-y-3 px-6 pb-6">
             {authState.allProfilesFetched ? (
               authState.allUsers.slice(0, 10).map((person, idx) => (
@@ -179,7 +179,7 @@ function DashboardLayout({ children }) {
 
       <div className="flex h-screen lg:h-[calc(89vh-0px)]">
         {/* Desktop Sidebar */}
-        <div className="hidden lg:flex lg:w-80 lg:flex-col bg-white border-r border-gray-200">
+        <div className="hidden lg:flex lg:w-80 h-[99%] lg:flex-col bg-white border-r border-gray-200">
           <SidebarContent />
         </div>
 
@@ -192,7 +192,7 @@ function DashboardLayout({ children }) {
           </main>
 
           {/* Right Sidebar - Top Profiles */}
-          <div className="hidden xl:block xl:w-80 bg-white border-l border-gray-200">
+          <div className="hidden xl:block xl:w-80 h-[100%]  bg-white border-l border-gray-200">
             <TopProfiles />
           </div>
         </div>
@@ -206,7 +206,7 @@ function DashboardLayout({ children }) {
               <Users className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-full sm:w-96">
+          <SheetContent side="right" className="w-full sm:w-96 ">
             <TopProfiles />
           </SheetContent>
         </Sheet>

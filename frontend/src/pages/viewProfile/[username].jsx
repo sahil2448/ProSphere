@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import {
-  getMyConnectionsRequests,
+  getConnectionRequest,
   sendConnectionRequest,
 } from "@/config/redux/action/authAction";
 import { Button } from "@/Components/ui/button";
@@ -35,7 +35,7 @@ function viewProfilePage({ userProfile }) {
   const getUserPosts = async () => {
     await dispatch(getAllPosts());
     await dispatch(
-      getMyConnectionsRequests({ token: localStorage.getItem("token") })
+      getConnectionRequest({ token: localStorage.getItem("token") })
     );
   };
 
@@ -57,19 +57,14 @@ function viewProfilePage({ userProfile }) {
   }, [postState.posts.allPosts, router.query.username]);
 
   useEffect(() => {
-    if (
+    const isConnected =
       Array.isArray(authState.connections) &&
       authState.connections.some(
-        (user) => user.connectionId._id === userProfile.userId._id
-      )
-    ) {
-      setIsCurrentUserInConnection(true);
-    } else {
-      setIsCurrentUserInConnection(false);
-    }
-  }, [authState.connections, userProfile.userId._id]);
+        (connection) => connection._id === userProfile.userId._id
+      );
+    setIsCurrentUserInConnection(isConnected);
+  }, [authState.connections]);
 
-  // console.log(isCurrentUserInConnection);
   return (
     <UserLayout>
       <DashboardLayout>
@@ -96,7 +91,7 @@ function viewProfilePage({ userProfile }) {
               </div>
               <div>
                 {isCurrentUserInConnection ? (
-                  <Button>Connected</Button>
+                  <Button variant="outline">Connected</Button>
                 ) : (
                   <Button
                     onClick={async () => {
@@ -106,12 +101,22 @@ function viewProfilePage({ userProfile }) {
                           connectionId: userProfile.userId._id,
                         })
                       );
-                      // Refetch connections to update state
+                      // Wait for getConnectionRequest to finish
                       await dispatch(
-                        getMyConnectionsRequests({
+                        getConnectionRequest({
                           token: localStorage.getItem("token"),
                         })
                       );
+                      // Optionally, force check here if needed
+                      // const updatedConnections =
+                      //   store.getState().auth.connections;
+                      // const isConnected =
+                      //   Array.isArray(updatedConnections) &&
+                      //   updatedConnections.some(
+                      //     (connection) =>
+                      //       connection._id === userProfile.userId._id
+                      //   );
+                      // setIsCurrentUserInConnection(isConnected);
                     }}
                   >
                     connect
