@@ -31,14 +31,19 @@ POST http://localhost:9090/user/update_profile_data HTTP/1.1
 content-type: application/json
 
 {
-    "token":"34858f7ea1a1eb46781742e03085abe193b2eb3584d7540aaf6e750b3f7c4cbc",
+    "token":"16ca075f8eb8bbfa327fb14d17b71bd808f8f0ec41c906de74e18bcaec6ebc39",
     "bio":"Hii I am sahil yuvraj kamble",
     "currentPost":"Maharaja",
     "pastWork":[
         {
             "company":"Maheshmati samrajya",
         "position":"Raja",
-        "fieldOfStudy":"Leadership"
+        "Year":"4"
+        },
+        {
+            "company":"TATA Consultancy Services",
+        "position":"Software Engineer",
+        "Year":"2"
         }
     ],
     "education":[

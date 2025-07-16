@@ -138,7 +138,7 @@ function DashboardLayout({ children }) {
                   </div>
                   <Badge variant="secondary" className="text-xs">
                     {idx + 1}
-                  </Badge> 
+                  </Badge>
                   {/*  */}
                 </div>
               ))

@@ -12,6 +12,7 @@ import {
 } from "@/config/redux/action/authAction";
 import { Button } from "@/Components/ui/button";
 import { useRouter } from "next/router";
+import { store } from "@/config/redux/store";
 
 function viewProfilePage({ userProfile }) {
   // useEffect(() => {
@@ -31,6 +32,8 @@ function viewProfilePage({ userProfile }) {
 
   const [isCurrentUserInConnection, setIsCurrentUserInConnection] =
     useState(false);
+
+  const [isConnectionNull, setIsConnectionNull] = useState(true);
 
   const getUserPosts = async () => {
     await dispatch(getAllPosts());
@@ -57,12 +60,15 @@ function viewProfilePage({ userProfile }) {
   }, [postState.posts.allPosts, router.query.username]);
 
   useEffect(() => {
-    const isConnected =
+    const matchedConnection =
       Array.isArray(authState.connections) &&
-      authState.connections.some(
-        (connection) => connection._id === userProfile.userId._id
+      authState.connections.find(
+        (cn) => cn.connectionId._id === userProfile.userId._id
       );
-    setIsCurrentUserInConnection(isConnected);
+    setIsCurrentUserInConnection(!!matchedConnection);
+    if (matchedConnection && matchedConnection.status_accepted === true) {
+      setIsConnectionNull(false);
+    }
   }, [authState.connections]);
 
   return (
@@ -83,7 +89,7 @@ function viewProfilePage({ userProfile }) {
             />
           </div>
           <div className="flex pt-10 w-full">
-            <div className="w-[70%]">
+            <div className="w-[70%] flex flex-col gap-3">
               {" "}
               <div className="flex gap-4">
                 <p className="font-bold ">{userProfile.userId.name}</p>
@@ -91,46 +97,82 @@ function viewProfilePage({ userProfile }) {
               </div>
               <div>
                 {isCurrentUserInConnection ? (
-                  <Button variant="outline">Connected</Button>
+                  <button className="flex border-2 gap-2  justify-center cursor-pointer items-center w-fit py-1 text-black border-black rounded-xl px-3  bg-gray-100">
+                    {isConnectionNull ? <>Pending</> : <>Connected</>}
+                    {/* <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="m4.5 12.75 6 6 9-13.5"
+                      />
+                    </svg> */}
+                  </button>
                 ) : (
                   <Button
-                    onClick={async () => {
-                      await dispatch(
+                    onClick={() => {
+                      dispatch(
                         sendConnectionRequest({
                           token: localStorage.getItem("token"),
                           connectionId: userProfile.userId._id,
                         })
                       );
                       // Wait for getConnectionRequest to finish
-                      await dispatch(
+                      dispatch(
                         getConnectionRequest({
                           token: localStorage.getItem("token"),
                         })
                       );
                       // Optionally, force check here if needed
-                      // const updatedConnections =
-                      //   store.getState().auth.connections;
-                      // const isConnected =
-                      //   Array.isArray(updatedConnections) &&
-                      //   updatedConnections.some(
-                      //     (connection) =>
-                      //       connection._id === userProfile.userId._id
-                      //   );
-                      // setIsCurrentUserInConnection(isConnected);
+                      const updatedConnections =
+                        store.getState().auth.connections;
+                      const matchedConnection =
+                        Array.isArray(updatedConnections) &&
+                        updatedConnections.some(
+                          (connection) =>
+                            connection._id === userProfile.userId._id
+                        );
+                      setIsCurrentUserInConnection(matchedConnection);
                     }}
+                    className="cursor-pointer"
                   >
-                    connect
+                    Connect
                   </Button>
                 )}
               </div>
               <div>
                 <p>{userProfile.bio}</p>
               </div>
+              <div>
+                <p className="font-bold">Work History</p>
+                <div className="flex flex-wrap gap-3">
+                  {userProfile.pastWork.map((work) => {
+                    return (
+                      <div
+                        className="bg-white w-fit px-3 py-2 rounded-md"
+                        style={{
+                          boxShadow: "10px 10px 10px 0px rgb(0,0,0,0.1)",
+                        }}
+                      >
+                        <p>Company Name : {work.company}</p>
+                        <p>Position : {work.position}</p>
+                        <p>Year of Experience : {work.Year}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
             <div className="w-[30%] flex flex-col gap-5 ">
               <p className="font-bold">Recent Activity</p>
-              <ScrollArea className="h-[70%] w-[100%]  border-1 border-black rounded-md  ">
-                <div className="flex flex-col gap-5 pt-3 bg-white">
+              <ScrollArea className="h-[40vh] w-[100%]  border-1 bg-white border-black rounded-md  ">
+                <div className="flex flex-col gap-5 pt-3 ">
                   {(userPosts || []).map((post, idx) => (
                     <div
                       key={idx}

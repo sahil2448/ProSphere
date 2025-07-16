@@ -79,7 +79,7 @@ const sendConnectionRequest = createAsyncThunk(
         connectionId: user.connectionId,
         // },
       });
-
+      thunkAPI.dispatch(getConnectionRequest({ token: user.token })); // we are dispatching this action to update the state, so that it will render the pending/connected button on the state change at frontend
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
@@ -91,13 +91,14 @@ const getConnectionRequest = createAsyncThunk(
   "user/getConnectionRequests",
   async (user, thunkAPI) => {
     try {
-      console.log(user.token);
+      // console.log(user.token);
       const response = await clientServer.get("user/getConnectionRequests", {
         params: {
           token: user.token,
         },
       });
-      return thunkAPI.fulfillWithValue(response.data.connections);
+      console.log(response.data);
+      return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
