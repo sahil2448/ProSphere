@@ -218,12 +218,14 @@ const getAllUserProfile = async (req, res) => {
 const downloadProfile = async (req, res) => {
   try {
     const user_id = req.query.id;
+    console.log("query", req.query);
     const userProfile = await Profile.findOne({ userId: user_id }).populate(
       "userId",
       "name username email profilePicture"
     );
-
+    // console.log("output", userProfile);
     const outputPath = await convertUserDataToPDF(userProfile);
+    console.log("outputPath", outputPath);
     return res.json({ message: outputPath });
   } catch (e) {
     return res.status(500).json({ message: e.message });

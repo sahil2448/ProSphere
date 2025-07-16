@@ -95,7 +95,7 @@ function viewProfilePage({ userProfile }) {
                 <p className="font-bold ">{userProfile.userId.name}</p>
                 <p>@{userProfile.userId.username}</p>
               </div>
-              <div>
+              <div className="flex gap-5 items-center ">
                 {isCurrentUserInConnection ? (
                   <button className="flex border-2 gap-2  justify-center cursor-pointer items-center w-fit py-1 text-black border-black rounded-xl px-3  bg-gray-100">
                     {isConnectionNull ? <>Pending</> : <>Connected</>}
@@ -145,6 +145,34 @@ function viewProfilePage({ userProfile }) {
                     Connect
                   </Button>
                 )}
+                {/* {console.log("user ki id: ", userProfile._id)} */}
+                <div
+                  className="cursor-pointer"
+                  onClick={async () => {
+                    const response = await clientServer.get(
+                      `/user/download_resume?id=${userProfile.userId._id}`
+                    );
+                    window.open(
+                      `${BASE_URL}/${response.data.message}`,
+                      "_blank"
+                    );
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                </div>
               </div>
               <div>
                 <p>{userProfile.bio}</p>

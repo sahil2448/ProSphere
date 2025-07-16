@@ -342,6 +342,7 @@ function Dashboard() {
                               ></Input>
                               <Button
                                 type="submit"
+                                className="cursor-pointer"
                                 onClick={async () => {
                                   await dispatch(
                                     postComment({
