@@ -28,7 +28,12 @@ function Navbar() {
           <div className="flex items-center gap-5">
             {" "}
             <div>Hey, {authState.user.userId.name}</div>
-            <p className="font-bold cursor-pointer">Profile</p>
+            <p
+              className="font-bold cursor-pointer"
+              onClick={() => router.push("/profile")}
+            >
+              Profile
+            </p>
             <Button
               variant="destructive"
               onClick={handleLogout}
