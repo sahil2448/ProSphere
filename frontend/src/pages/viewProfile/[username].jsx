@@ -8,6 +8,7 @@ import { getAllPosts } from "@/config/redux/action/postAction";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import {
   getConnectionRequest,
+  getMyConnectionsRequests,
   sendConnectionRequest,
 } from "@/config/redux/action/authAction";
 import { Button } from "@/Components/ui/button";
@@ -40,6 +41,9 @@ function viewProfilePage({ userProfile }) {
     await dispatch(
       getConnectionRequest({ token: localStorage.getItem("token") })
     );
+    await dispatch(
+      getMyConnectionsRequests({ token: localStorage.getItem("token") })
+    );
   };
 
   useEffect(() => {
@@ -61,15 +65,20 @@ function viewProfilePage({ userProfile }) {
 
   useEffect(() => {
     const matchedConnection =
-      Array.isArray(authState.connections) &&
-      authState.connections.find(
-        (cn) => cn.connectionId._id === userProfile.userId._id
-      );
+      (Array.isArray(authState.connections) &&
+        authState.connections.find(
+          (cn) => cn.connectionId._id === userProfile.userId._id
+        )) ||
+      (Array.isArray(authState.connectionRequest) &&
+        authState.connectionRequest.find(
+          (cn) => cn.userId._id === userProfile.userId._id
+        ));
+
     setIsCurrentUserInConnection(!!matchedConnection);
     if (matchedConnection && matchedConnection.status_accepted === true) {
       setIsConnectionNull(false);
     }
-  }, [authState.connections]);
+  }, [authState.connections, authState.connectionRequest]);
 
   return (
     <UserLayout>
@@ -130,15 +139,15 @@ function viewProfilePage({ userProfile }) {
                         })
                       );
                       // Optionally, force check here if needed
-                      const updatedConnections =
-                        store.getState().auth.connections;
-                      const matchedConnection =
-                        Array.isArray(updatedConnections) &&
-                        updatedConnections.some(
-                          (connection) =>
-                            connection._id === userProfile.userId._id
-                        );
-                      setIsCurrentUserInConnection(matchedConnection);
+                      // const updatedConnections =
+                      //   store.getState().auth.connections;
+                      // const matchedConnection =
+                      //   Array.isArray(updatedConnections) &&
+                      //   updatedConnections.some(
+                      //     (connection) =>
+                      //       connection._id === userProfile.userId._id
+                      //   );
+                      // setIsCurrentUserInConnection(matchedConnection);
                     }}
                     className="cursor-pointer"
                   >

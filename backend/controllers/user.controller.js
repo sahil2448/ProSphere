@@ -218,19 +218,24 @@ const getAllUserProfile = async (req, res) => {
 const downloadProfile = async (req, res) => {
   try {
     const user_id = req.query.id;
-    console.log("query", req.query);
+    // console.log("query", req.query);
     const userProfile = await Profile.findOne({ userId: user_id }).populate(
       "userId",
       "name username email profilePicture"
     );
     // console.log("output", userProfile);
     const outputPath = await convertUserDataToPDF(userProfile);
-    console.log("outputPath", outputPath);
+    if (!outputPath) {
+      console.log("outputPath not found");
+    }
+    // console.log(outputPath);
     return res.json({ message: outputPath });
   } catch (e) {
     return res.status(500).json({ message: e.message });
   }
 };
+// In JavaScript, any function marked as async returns a Promise by default.
+// If you call an async function without using await, the function’s return value is a Promise, not the final (resolved) data.
 
 const sendConnectionRequest = async (req, res) => {
   try {
@@ -300,8 +305,8 @@ const getMyConnectionsRequests = async (req, res) => {
 };
 
 const whatAreMyConnections = async (req, res) => {
-  const { token } = req.query;
   try {
+    const { token } = req.query;
     const user = await User.findOne({ token });
 
     if (!user) {
@@ -311,7 +316,7 @@ const whatAreMyConnections = async (req, res) => {
     const connections = await ConnectionRequest.find({
       connectionId: user._id,
     }).populate("userId", "name username email profilePicture");
-
+    console.log("Ye lo connections: ", connections);
     return res.json(connections);
   } catch (e) {
     return res.status(500).json({ message: e.message });
@@ -319,15 +324,17 @@ const whatAreMyConnections = async (req, res) => {
 };
 
 const acceptConnectionRequest = async (req, res) => {
-  const { token, requestId, action_type } = req.body;
   try {
+    console.log(req.query);
+    const { token, connection_id, action_type } = req.query;
+
     const user = await User.findOne({ token });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const connection = await ConnectionRequest.findOne({ _id: requestId });
+    const connection = await ConnectionRequest.findOne({ _id: connection_id });
 
     if (!connection) {
       return res.status(404).json({ message: "Connection not found" });
@@ -341,7 +348,9 @@ const acceptConnectionRequest = async (req, res) => {
 
     await connection.save();
     return res.json({ message: "Request Updated !" });
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
 export {

@@ -108,6 +108,7 @@ const authSlice = createSlice({
       })
       .addCase(getMyConnectionsRequests.fulfilled, (state, action) => {
         state.connectionRequest = action.payload;
+        console.log("from reducer:", state.connectionRequest);
       })
       .addCase(getMyConnectionsRequests.rejected, (state, action) => {
         state.message = action.payload;
