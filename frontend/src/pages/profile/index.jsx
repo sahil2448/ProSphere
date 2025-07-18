@@ -1,9 +1,11 @@
-import { BASE_URL } from "@/config";
+import { Button } from "@/Components/ui/button";
+import { BASE_URL, clientServer } from "@/config";
 import { getAboutUser } from "@/config/redux/action/authAction";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+// import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,91 +24,211 @@ function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    console.log("authState", authState.user);
     setUserProfile(authState.user);
-  }, [authState.user]);
-  //   console.log("user", userProfile.userId);
 
-  useEffect(() => {
-    let posts = Array.isArray(postState.posts.allPosts)
-      ? postState.posts.allPosts.filter((post) => {
-          return post.userId.username === router.query.username;
-        })
-      : [];
+    if (authState.user) {
+      let posts = Array.isArray(postState.posts.allPosts)
+        ? postState.posts.allPosts.filter((post) => {
+            return post.userId.username === authState.user.userId.username;
+          })
+        : [];
 
-    setUserPosts(posts);
-  }, [postState.posts.allPosts, router.query.username]);
+      setUserPosts(posts);
+    }
+  }, [authState.user, postState.posts.allPosts, authState.user]);
+
+  const updateProfilePicture = async (file) => {
+    const formData = new FormData();
+    formData.append("profile_picture", file);
+    formData.append("token", localStorage.getItem("token"));
+
+    await clientServer.post("/user/update_profile_picture", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    dispatch(getAboutUser({ token: localStorage.getItem("token") }));
+  };
+
+  const updateProfileData = async () => {
+    await clientServer.post("/user/user_update", {
+      token: localStorage.getItem("token"),
+      name: userProfile.userId.name,
+    });
+
+    await clientServer.post("/user/update_profile_data", {
+      token: localStorage.getItem("token"),
+      bio: userProfile.bio,
+      pastWork: userProfile.pastWork,
+      currentPost: userProfile.currentPost,
+      education: userProfile.education,
+    });
+
+    dispatch(getAboutUser({ token: localStorage.getItem("token") }));
+  };
+
   return (
     <UserLayout>
       <DashboardLayout>
-        {authState.user && userProfile && (
-          <div className="h-[100vh] relative p-5 ">
-            {" "}
-            <div className="">
-              <img
-                src="https://images.pexels.com/photos/164175/pexels-photo-164175.jpeg"
-                alt=""
-                className="object-cover h-[27vh] w-full rounded-lg"
-              />
-              <img
-                src={`${BASE_URL}/${userProfile.userId.profilePicture}`}
-                alt=""
-                className="w-[6em] h-[6em] absolute top-36 left-16 rounded-full bg-black"
-              />
-            </div>
-            <div className="flex pt-10 w-full">
-              <div className="w-[70%] flex flex-col gap-3">
-                {" "}
-                <div className="flex gap-4">
-                  <p className="font-bold ">{userProfile.userId.name}</p>
-                  <p>@{userProfile.userId.username}</p>
-                </div>
-                <div>
-                  <p>{userProfile.bio}</p>
-                </div>
-                <div>
-                  <p className="font-bold">Work History</p>
-                  <div className="flex flex-wrap gap-3">
-                    {userProfile.pastWork.map((work) => {
-                      return (
-                        <div
-                          className="bg-white w-fit px-3 py-2 rounded-md"
-                          style={{
-                            boxShadow: "10px 10px 10px 0px rgb(0,0,0,0.1)",
-                          }}
-                        >
-                          <p>Company Name : {work.company}</p>
-                          <p>Position : {work.position}</p>
-                          <p>Year of Experience : {work.Year}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-              <div className="w-[30%] flex flex-col gap-5 ">
-                <p className="font-bold">Recent Activity</p>
-                <ScrollArea className="h-[40vh] w-[100%]  border-1 bg-white border-black rounded-md  ">
-                  <div className="flex flex-col gap-5 pt-3 ">
-                    {(userPosts || []).map((post, idx) => (
-                      <div
-                        key={idx}
-                        className="flex gap-2 items-start hover:bg-gray-100 p-2 px-5 cursor-pointer"
-                      >
+        <ScrollArea className="h-[90vh] w-[100%]  border-none  p-0">
+          <div className=" flex h-full flex-col gap-5 w-[100%] py-2 ">
+            {authState.user && userProfile && (
+              <div className=" bg-gray-50 px-2 sm:px-6 ">
+                <div className="mx-auto max-w-6xl bg-white rounded-xl shadow-lg p-0 sm:p-8">
+                  <div className="relative">
+                    <img
+                      src="https://images.pexels.com/photos/164175/pexels-photo-164175.jpeg"
+                      alt="cover"
+                      className="object-cover h-40 sm:h-40 w-full rounded-t-xl"
+                    />
+                    <label htmlFor="fileInput" className="cursor-pointer">
+                      <div className="absolute -bottom-10 left-6 group flex items-center">
                         <img
-                          src={`${BASE_URL}/${post.media}`}
-                          alt=""
-                          className="w-10 h-10"
+                          src={`${BASE_URL}/${userProfile.userId.profilePicture}`}
+                          alt="profile"
+                          className="w-24 h-24 border-4 border-white object-cover rounded-full shadow-md bg-gray-200"
                         />
-                        <p className="text-sm">{post.body}</p>
+                        <div className="absolute bottom-2 left-2 flex items-center opacity-0 group-hover:opacity-100 bg-black bg-opacity-70 rounded-full px-3 py-1 text-xs text-white transition-all duration-200 cursor-pointer">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="w-4 h-4 mr-1"
+                          >
+                            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                          </svg>
+                          Edit
+                        </div>
                       </div>
-                    ))}
+                      <input
+                        onChange={(e) =>
+                          updateProfilePicture(e.target.files[0])
+                        }
+                        type="file"
+                        className="hidden"
+                        id="fileInput"
+                      />
+                    </label>
                   </div>
-                </ScrollArea>
+
+                  <div className="flex flex-col lg:flex-row gap-8 mt-16">
+                    <div className="w-full lg:w-2/3 flex flex-col gap-6">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                        <input
+                          type="text"
+                          className="text-2xl font-semibold border-none bg-transparent focus:outline-none p-0"
+                          value={userProfile.userId.name}
+                          onChange={(e) =>
+                            setUserProfile({
+                              ...userProfile,
+                              userId: {
+                                ...userProfile.userId,
+                                name: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        <span className="text-md text-gray-500 font-medium pt-0.5">
+                          @{userProfile.userId.username}
+                        </span>
+                      </div>
+                      <textarea
+                        className="
+                      font-serif px-4 py-2 min-h-24 w-full max-w-2xl appearance-none
+                      outline-none border border-gray-200 rounded-lg shadow-sm
+                      focus:border-blue-500 focus:ring-2 focus:ring-blue-100
+                      transition-all duration-200 bg-gray-50 text-gray-800
+                      placeholder-gray-400 resize-y
+                    "
+                        value={userProfile.bio}
+                        onChange={(e) =>
+                          setUserProfile({
+                            ...userProfile,
+                            bio: e.target.value,
+                          })
+                        }
+                        placeholder="Write a short bio about yourself..."
+                      />
+                      <div>
+                        <p className="font-semibold mb-2">Work History</p>
+                        <div className="flex flex-wrap gap-3">
+                          {(userProfile.pastWork || []).map((work, idx) => (
+                            <div
+                              key={idx}
+                              className="bg-gray-100 border border-gray-200 shadow-sm w-fit px-4 py-2 rounded-md"
+                            >
+                              <p className="text-sm">
+                                <span className="font-semibold">Company: </span>
+                                {work.company}
+                              </p>
+                              <p className="text-sm">
+                                <span className="font-semibold">
+                                  Position:{" "}
+                                </span>
+                                {work.position}
+                              </p>
+                              <p className="text-sm">
+                                <span className="font-semibold">
+                                  Year of Experience:{" "}
+                                </span>
+                                {work.Year}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      {(userProfile.userId.name !==
+                        authState.user.userId.name ||
+                        userProfile.bio !== authState.user.bio) && (
+                        <div className="flex mt-4">
+                          <button
+                            className="px-5 py-2 bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
+                            onClick={updateProfileData}
+                          >
+                            Update Profile
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="w-full lg:w-1/3 flex flex-col gap-4">
+                      <h2 className="font-semibold text-lg mb-2">
+                        Recent Activity
+                      </h2>
+                      <div className="h-64 md:h-72 w-full border border-gray-200 bg-gray-50 rounded-md shadow-inner overflow-hidden">
+                        <ScrollArea className="h-full w-full">
+                          <div className="flex flex-col gap-4 p-3">
+                            {(userPosts || []).map((post, idx) => (
+                              <div
+                                key={idx}
+                                className="flex gap-3 items-start hover:bg-gray-100 rounded px-3 py-2 cursor-pointer transition"
+                              >
+                                <img
+                                  src={`${BASE_URL}/${post.media}`}
+                                  alt=""
+                                  className="w-10 h-10 object-cover flex-shrink-0 rounded-md border border-gray-200 bg-white"
+                                />
+                                <p className="text-sm text-gray-700">
+                                  {post.body}
+                                </p>
+                              </div>
+                            ))}
+                            {userPosts.length === 0 && (
+                              <div className="text-gray-400 text-center py-6 text-sm">
+                                No posts yet.
+                              </div>
+                            )}
+                          </div>
+                        </ScrollArea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </ScrollArea>
       </DashboardLayout>
     </UserLayout>
   );
