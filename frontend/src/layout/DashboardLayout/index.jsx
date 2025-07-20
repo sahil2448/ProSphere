@@ -103,62 +103,60 @@ function DashboardLayout({ children }) {
   );
 
   const TopProfiles = () => (
-    <Card className="h-full border-0 shadow-sm ">
-      <CardHeader className="">
-        <CardTitle className="text-lg font-bold text-gray-900">
-          Top Profiles
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
-        <ScrollArea className="h-[calc(100vh-10rem)]">
-          <div className="space-y-3 px-6 pb-6">
-            {authState.allProfilesFetched ? (
-              authState.allUsers.slice(0, 10).map((person, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage
-                      src={person.userId.avatar || "/placeholder.svg"}
-                    />
-                    <AvatarFallback className="bg-gray-200 text-gray-700 text-sm font-medium">
-                      {person.userId.name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      {person.userId.name}
+    <div className="flex flex-col h-full">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900">Top Profiles</h2>
+      </div>
+      {/* <CardContent className="p-0"> */}
+      <ScrollArea className="h-[calc(100vh-10rem)] ">
+        <div className="space-y-3 px-6 pb-6">
+          {authState.allProfilesFetched ? (
+            authState.allUsers.slice(0, 10).map((person, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage
+                    src={person.userId.avatar || "/placeholder.svg"}
+                  />
+                  <AvatarFallback className="bg-gray-200 text-gray-700 text-sm font-medium">
+                    {person.userId.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {person.userId.name}
+                  </p>
+                  {person.userId.email && (
+                    <p className="text-xs text-gray-500 truncate">
+                      {person.userId.email}
                     </p>
-                    {person.userId.email && (
-                      <p className="text-xs text-gray-500 truncate">
-                        {person.userId.email}
-                      </p>
-                    )}
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {idx + 1}
-                  </Badge>
-                  {/*  */}
+                  )}
                 </div>
-              ))
-            ) : (
-              <div className="space-y-3">
-                {Array.from({ length: 5 }).map((_, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3">
-                    <div className="h-10 w-10 bg-gray-200 rounded-full animate-pulse" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                      <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
-                    </div>
-                  </div>
-                ))}
+                <Badge variant="secondary" className="text-xs">
+                  {idx + 1}
+                </Badge>
+                {/*  */}
               </div>
-            )}
-          </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+            ))
+          ) : (
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-3">
+                  <div className="h-10 w-10 bg-gray-200 rounded-full animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                    <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </ScrollArea>
+      {/* </CardContent> */}
+    </div>
   );
 
   return (

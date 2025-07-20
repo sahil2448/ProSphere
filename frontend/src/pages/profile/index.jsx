@@ -31,6 +31,17 @@ function ProfilePage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const [inputData, setInputData] = useState({
+    company: "",
+    positon: "",
+    Year: "",
+  });
+
+  const handleWorkInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputData({ ...inputData, [name]: value });
+  };
+
   useEffect(() => {
     dispatch(getAboutUser({ token: localStorage.getItem("token") }));
     dispatch(getAllPosts({ token: localStorage.getItem("token") }));
@@ -164,7 +175,9 @@ function ProfilePage() {
                         placeholder="Write a short bio about yourself..."
                       />
                       <div>
-                        <p className="font-semibold mb-2">Work History</p>
+                        <div className="">
+                          <p className="font-semibold mb-2">Work History</p>
+                        </div>
 
                         <div className="flex flex-wrap gap-3">
                           {(userProfile.pastWork || []).map((work, idx) => (
@@ -249,6 +262,7 @@ function ProfilePage() {
                               <Label htmlFor="text">Company Name</Label>
                               <Input
                                 id="company"
+                                onChange={handleWorkInputChange}
                                 name="company"
                                 // defaultValue=""
                                 placeholder="Company Name ?"
@@ -258,16 +272,18 @@ function ProfilePage() {
                               <Label htmlFor="text">Position</Label>
                               <Input
                                 id="position"
+                                onChange={handleWorkInputChange}
                                 name="position"
                                 // defaultValue=""
                                 placeholder="What was you position/role ?"
                               />
                             </div>
                             <div className="grid flex-1 gap-2">
-                              <Label htmlFor="text">Years</Label>
+                              <Label htmlFor="text">Year</Label>
                               <Input
-                                id="Years"
-                                name="Years"
+                                id="Year"
+                                onChange={handleWorkInputChange}
+                                name="Year"
                                 // defaultValue=""
                                 placeholder="How many you worked ?"
                               />
@@ -283,31 +299,27 @@ function ProfilePage() {
                                 Close
                               </Button>
                             </DialogClose>
-                            <DialogClose asChild>
+                            <DialogClose asChild className="">
                               <Button
                                 type="button"
-                                className="bg-black text-white cursor-pointer"
+                                className="bg-black text-white cursor-pointer "
+                                onClick={() => {
+                                  setUserProfile({
+                                    ...userProfile,
+                                    pastWork: [
+                                      ...userProfile.pastWork,
+                                      inputData,
+                                    ],
+                                  });
+                                }}
                                 // variant="ghost"
                               >
-                                Save
+                                Add Work
                               </Button>
                             </DialogClose>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
-
-                      {(userProfile.userId.name !==
-                        authState.user.userId.name ||
-                        userProfile.bio !== authState.user.bio) && (
-                        <div className="flex mt-4">
-                          <button
-                            className="px-5 py-2 bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
-                            onClick={updateProfileData}
-                          >
-                            Update Profile
-                          </button>
-                        </div>
-                      )}
                     </div>
 
                     <div className="w-full lg:w-1/3 flex flex-col gap-4">
@@ -341,6 +353,22 @@ function ProfilePage() {
                         </ScrollArea>
                       </div>
                     </div>
+                  </div>
+                  <div>
+                    {" "}
+                    {(userProfile.userId.name !== authState.user.userId.name ||
+                      userProfile.bio !== authState.user.bio ||
+                      userProfile.pastWork.length !==
+                        authState.user.pastWork.length) && (
+                      <div className="flex mt-4">
+                        <button
+                          className="px-5 py-2 bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
+                          onClick={updateProfileData}
+                        >
+                          Update Profile
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

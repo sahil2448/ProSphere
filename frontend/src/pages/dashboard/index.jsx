@@ -90,11 +90,11 @@ function Dashboard() {
         <DashboardLayout>
           <ScrollArea className=" h-[90vh] w-[100%] mx-auto border-none rounded-md pt-4 px-10 ">
             <div className="flex w-[100%] items-start gap-5 bg-white border-2 px-5 py-3 rounded-lg">
-              <div>
+              <div className="w-[5rem]">
                 <img
                   src={`${BASE_URL}/${authState.user.userId.profilePicture}`}
                   alt=""
-                  className="w-[4rem] border-1 rounded-full"
+                  className="w-[4rem] h-[4rem] border-1 rounded-full"
                 />
               </div>
               <div className="w-full flex flex-col gap-5">

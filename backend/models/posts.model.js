@@ -8,6 +8,8 @@ const PostSchema = mongoose.Schema({
   updatedAt: { type: Date, default: Date.now() },
   media: { type: String, default: "" },
   active: { type: Boolean, default: true },
+  // In your Post schema/model
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 
   fileType: { type: String, default: "" },
 });
