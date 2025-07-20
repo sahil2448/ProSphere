@@ -10,6 +10,19 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 function ProfilePage() {
   const [userProfile, setUserProfile] = useState({});
   const [userPosts, setUserPosts] = useState([]);
@@ -152,6 +165,7 @@ function ProfilePage() {
                       />
                       <div>
                         <p className="font-semibold mb-2">Work History</p>
+
                         <div className="flex flex-wrap gap-3">
                           {(userProfile.pastWork || []).map((work, idx) => (
                             <div
@@ -178,6 +192,110 @@ function ProfilePage() {
                           ))}
                         </div>
                       </div>
+                      {/* <Dialog variant="ghost" className="cursor-pointer  ">
+                        <DialogTrigger
+                          asChild
+                          // onClick={async () =>
+                          // }
+                        >
+                          <Button variant="ghost" className="cursor-pointer">
+                            Add Work
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[500px] max-h-[80vh] min-h-[60vh] ">
+                          <DialogHeader className="h-[60vh] ">
+                            <DialogTitle></DialogTitle>
+                            <DialogDescription className="absolute top-14 overflow-y-scroll w-[90%] h-[75%]">
+                              <div>
+                                {<div className="flex flex-col gap-5"></div>}
+                              </div>
+                            </DialogDescription>
+                            <DialogFooter className="w-[90%] absolute bottom-2">
+                              <Input
+                                placeholder="Write your comment"
+                                // onChange={}
+                                // value={}
+                                className="bg-white"
+                              ></Input>
+                              <Button
+                                type="submit"
+                                className="cursor-pointer"
+                                // onClick={}
+                              >
+                                Add work
+                              </Button>
+                            </DialogFooter>
+                          </DialogHeader>
+                          <div className="grid gap-4"></div>
+                        </DialogContent>
+                      </Dialog> */}
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="cursor-pointer">
+                            Add Work
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Fill all the information</DialogTitle>
+                            <DialogDescription>
+                              Anyone who has this link will be able to view
+                              this.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="flex flex-col  gap-2">
+                            <div className="grid flex-1 gap-2">
+                              <Label htmlFor="text">Company Name</Label>
+                              <Input
+                                id="company"
+                                name="company"
+                                // defaultValue=""
+                                placeholder="Company Name ?"
+                              />
+                            </div>
+                            <div className="grid flex-1 gap-2">
+                              <Label htmlFor="text">Position</Label>
+                              <Input
+                                id="position"
+                                name="position"
+                                // defaultValue=""
+                                placeholder="What was you position/role ?"
+                              />
+                            </div>
+                            <div className="grid flex-1 gap-2">
+                              <Label htmlFor="text">Years</Label>
+                              <Input
+                                id="Years"
+                                name="Years"
+                                // defaultValue=""
+                                placeholder="How many you worked ?"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter className=" sm:justify-start">
+                            <DialogClose asChild>
+                              <Button
+                                type="button"
+                                className="cursor-pointer"
+                                variant="secondary"
+                              >
+                                Close
+                              </Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                              <Button
+                                type="button"
+                                className="bg-black text-white cursor-pointer"
+                                // variant="ghost"
+                              >
+                                Save
+                              </Button>
+                            </DialogClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+
                       {(userProfile.userId.name !==
                         authState.user.userId.name ||
                         userProfile.bio !== authState.user.bio) && (

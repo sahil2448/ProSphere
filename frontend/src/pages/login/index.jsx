@@ -34,11 +34,6 @@ function index() {
   };
 
   useEffect(() => {
-    // if (
-    //   tst &&
-    //   authState.message.message ===
-    //     "You are registered successfully! Please login"
-    // )
     {
       toast("User Register Successfully!", {
         action: {
