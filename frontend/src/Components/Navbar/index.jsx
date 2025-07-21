@@ -12,8 +12,8 @@ function Navbar() {
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem("token");
-    // router.push("/login");
     dispatch(reset());
+    router.push("/login");
   };
 
   return (

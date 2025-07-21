@@ -19,36 +19,36 @@ function index() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const handleRegister = () => {
-    console.log("Registering...");
-    dispatch(
-      registerUser({
-        name,
-        username,
-        email,
-        password,
-      })
-    );
-    setTst(true);
-    // setUserLoginMethod(true);
+  const handleRegister = async () => {
+    try {
+      console.log("Registering...");
+
+      await dispatch(
+        registerUser({ name, username, email, password })
+      ).unwrap();
+
+      setUserLoginMethod(true);
+    } catch (err) {
+      console.error("Registration failed:", err);
+    }
   };
 
-  useEffect(() => {
-    {
-      toast("User Register Successfully!", {
-        action: {
-          label: "X",
-          onClick: () => console.log("X"),
-        },
-        style: {
-          background: "rgb(220 252 231)", // Indigo
-          color: "rgb(21 128 61)",
-          opacity: "1",
-          border: " rgb(21 128 61)",
-        },
-      });
-    }
-  }, [tst, authState.message.message]);
+  // useEffect(() => {
+  //   {
+  //     toast("User Register Successfully!", {
+  //       action: {
+  //         label: "X",
+  //         onClick: () => console.log("X"),
+  //       },
+  //       // style: {
+  //       //   background: "rgb(220 252 231)", // Indigo
+  //       //   color: "rgb(21 128 61)",
+  //       //   opacity: "1",
+  //       //   border: " rgb(21 128 61)",
+  //       // },
+  //     });
+  //   }
+  // }, [tst, authState.message.message]);
 
   const handleLogin = () => {
     console.log("Logging in...");
@@ -97,7 +97,7 @@ function index() {
             <p
               className={authState.isError ? `text-red-500` : `text-green-500`}
             >
-              {authState.message.message}
+              {authState.message.message || ""}
             </p>
 
             <div className="flex flex-col gap-5 mt-10 min-w-[55%] max-w-[100%]">

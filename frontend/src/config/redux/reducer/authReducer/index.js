@@ -67,9 +67,10 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.message = {
-          message: "You are registered successfully! Please login",
-        };
+        // state.message = {
+        //   message: "You are registered successfully! Please login",
+        // };
+        state.message = "You are registered successfully! Please login";
         state.isError = false;
         state.isSuccess = true;
       })
