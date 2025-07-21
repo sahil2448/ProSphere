@@ -117,9 +117,7 @@ function DashboardLayout({ children }) {
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={person.userId.avatar || "/placeholder.svg"}
-                  />
+                  {/* <AvatarImage src={person.userId.profilePicture} /> */}
                   <AvatarFallback className="bg-gray-200 text-gray-700 text-sm font-medium">
                     {person.userId.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
@@ -160,7 +158,7 @@ function DashboardLayout({ children }) {
   );
 
   return (
-    <div className=" bg-gray-50">
+    <div className=" bg-gray-50 fixed lg:static top-16 lg:top-auto">
       {/* Mobile Header */}
       <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
@@ -183,8 +181,8 @@ function DashboardLayout({ children }) {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-          <main className="flex-1 px-10">
+        <div className="flex-1  flex flex-col sm:flex-row overflow-hidden py-5 lg:py-0">
+          <main className="flex-1 lg:px-10">
             <div className="h-full  border-r border-l border-gray-200">
               {children}
             </div>

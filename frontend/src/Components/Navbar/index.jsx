@@ -1,8 +1,10 @@
 import { reset } from "@/config/redux/reducer/authReducer";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
+import { getAboutUser } from "@/config/redux/action/authAction";
+import { getAllPosts } from "@/config/redux/action/postAction";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -13,6 +15,7 @@ function Navbar() {
     // router.push("/login");
     dispatch(reset());
   };
+
   return (
     <div className="px-[2rem] h-[8vh] bg-white sticky top-0 ">
       <div className="flex justify-between items-center h-full">
@@ -30,7 +33,9 @@ function Navbar() {
             <div>Hey, {authState.user.userId.name}</div>
             <p
               className="font-bold cursor-pointer"
-              onClick={() => router.push("/profile")}
+              onClick={() => {
+                router.push("/profile");
+              }}
             >
               Profile
             </p>
@@ -49,6 +54,10 @@ function Navbar() {
               // variant="secondary"
               onClick={() => {
                 router.push("/login");
+                dispatch(
+                  getAboutUser({ token: localStorage.getItem("token") })
+                );
+                dispatch(getAllPosts({ token: localStorage.getItem("token") }));
               }}
               className="bg-indigo-900 hover:bg-indigo-950 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
             >

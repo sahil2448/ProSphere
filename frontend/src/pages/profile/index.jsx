@@ -59,7 +59,7 @@ function ProfilePage() {
 
       setUserPosts(posts);
     }
-  }, [authState.user, postState.posts.allPosts, authState.user]);
+  }, [authState.user, postState.posts, authState.user]);
 
   const updateProfilePicture = async (file) => {
     const formData = new FormData();
@@ -95,9 +95,9 @@ function ProfilePage() {
   return (
     <UserLayout>
       <DashboardLayout>
-        <ScrollArea className="h-[90vh] w-[100%]  border-none  p-0">
-          <div className=" flex h-full flex-col gap-5 w-[100%] py-2 ">
-            {authState.user && userProfile && (
+        <ScrollArea className="h-[100vh] w-[100%] border-none  p-0 mb-10">
+          <div className=" flex h-full pb-20 flex-col gap-5 w-[100%] py-2 ">
+            {authState.user && userProfile && userProfile.userId ? (
               <div className=" bg-gray-50 px-2 sm:px-6 ">
                 <div className="mx-auto max-w-6xl bg-white rounded-xl shadow-lg p-0 sm:p-8">
                   <div className="relative">
@@ -136,7 +136,7 @@ function ProfilePage() {
                     </label>
                   </div>
 
-                  <div className="flex flex-col lg:flex-row gap-8 mt-16">
+                  <div className="flex flex-col lg:flex-row gap-8 mt-16 px-5 sm:px-0">
                     <div className="w-full lg:w-2/3 flex flex-col gap-6">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                         <input
@@ -322,11 +322,11 @@ function ProfilePage() {
                       </Dialog>
                     </div>
 
-                    <div className="w-full lg:w-1/3 flex flex-col gap-4">
+                    <div className="w-full lg:w-1/3  flex flex-col gap-4">
                       <h2 className="font-semibold text-lg mb-2">
                         Recent Activity
                       </h2>
-                      <div className="h-64 md:h-72 w-full border border-gray-200 bg-gray-50 rounded-md shadow-inner overflow-hidden">
+                      <div className=" h-64 md:h-72 w-full border border-gray-200 bg-gray-50 rounded-md shadow-inner overflow-hidden">
                         <ScrollArea className="h-full w-full">
                           <div className="flex flex-col gap-4 p-3">
                             {(userPosts || []).map((post, idx) => (
@@ -372,6 +372,8 @@ function ProfilePage() {
                   </div>
                 </div>
               </div>
+            ) : (
+              <div>Loading...</div>
             )}
           </div>
         </ScrollArea>
