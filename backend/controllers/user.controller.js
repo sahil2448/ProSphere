@@ -316,7 +316,6 @@ const whatAreMyConnections = async (req, res) => {
     const connections = await ConnectionRequest.find({
       connectionId: user._id,
     }).populate("userId", "name username email profilePicture");
-    console.log("Ye lo connections: ", connections);
     return res.json(connections);
   } catch (e) {
     return res.status(500).json({ message: e.message });
@@ -325,7 +324,6 @@ const whatAreMyConnections = async (req, res) => {
 
 const acceptConnectionRequest = async (req, res) => {
   try {
-    console.log(req.query);
     const { token, connection_id, action_type } = req.query;
 
     const user = await User.findOne({ token });

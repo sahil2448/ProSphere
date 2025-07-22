@@ -2,7 +2,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import ConnectedWorld from "../../public/ConnectedWorld.svg";
 import { Poppins } from "next/font/google";
-import Navbar from "@/Components/Navbar";
 import UserLayout from "@/layout/UserLayout";
 
 const poppins = Poppins({
@@ -12,37 +11,42 @@ const poppins = Poppins({
 });
 
 export default function Home() {
-  const routeTo = useRouter();
+  const router = useRouter();
   return (
     <UserLayout>
-      <div className={`container px-6  mx-auto ${poppins.className}`}>
-        <div className="flex justify-center gap-40 items-center h-[80vh] px-10">
-          <div className="w-[60vw] flex flex-col items-center ">
-            <div className="flex flex-col gap-4 ">
-              <p className="text-[2.9rem] font-semibold bg-gradient-to-r from-indigo-950 to-indigo-950/50  inline-block text-transparent bg-clip-text">
-                Connect with friends without Exaggeration
-              </p>
-              <p className="text-3xl text-gray-700">
-                A true Social Media platform, with no blufs !
-              </p>
-              <div
-                onClick={() => routeTo.push("/login")}
-                className="bg-indigo-900 hover:bg-indigo-950 w-fit h-fit px-5 py-2 cursor-pointer text-white transition-all rounded-sm duration-200"
-              >
-                <p>Join now</p>
-              </div>
-            </div>
+      <main
+        className={`container mx-auto px-4 sm:px-24 py-12 h-[90vh] flex items-center justify-center ${poppins.className}`}
+      >
+        <div className="flex flex-col-reverse lg:flex-row items-center justify-between w-full gap-10 lg:gap-20">
+          {/* Left - Text Section */}
+          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 bg-gradient-to-r from-blue-800 to-blue-400 text-transparent bg-clip-text leading-tight">
+              Connect with friends without Exaggeration
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-8">
+              A true Social Media platform, with no blufs!
+            </p>
+            <button
+              onClick={() => router.push("/login")}
+              className="bg-blue-800 cursor-pointer hover:bg-blue-950 text-white rounded-md px-6 py-3 font-medium text-base transition-all shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-indigo-600 focus:outline-none"
+            >
+              Join now
+            </button>
           </div>
 
-          <div className="w-[40vw] flex ">
-            <Image
-              src={ConnectedWorld}
-              alt="Connected World"
-              className="connected-world-image"
-            />
+          {/* Right - Image Section */}
+          <div className="w-full lg:w-1/2 flex justify-center items-center mb-8 lg:mb-0">
+            <div className="w-60 sm:w-80 md:w-96 lg:w-full max-w-xs md:max-w-md lg:max-w-lg">
+              <Image
+                src={ConnectedWorld}
+                alt="Connected World"
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </UserLayout>
   );
 }

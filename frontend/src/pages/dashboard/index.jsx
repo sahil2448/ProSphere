@@ -88,9 +88,9 @@ function Dashboard() {
     return (
       <UserLayout>
         <DashboardLayout>
-          <ScrollArea className=" h-[90vh] w-[100%] mx-auto border-none rounded-md pt-4 px-10">
+          <ScrollArea className=" h-[88svh] w-[100%] mx-auto border-none rounded-md pt-4 px-4 sm:px-10">
             <div className="flex w-[100%] items-start gap-5 bg-white border-2 px-5 py-3 rounded-lg">
-              <div className="w-[5rem]">
+              <div className="w-[5rem] hidden sm:flex">
                 <img
                   src={`${BASE_URL}/${authState.user.userId.profilePicture}`}
                   alt=""

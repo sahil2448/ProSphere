@@ -1,3 +1,4 @@
+import { Button } from "@/Components/ui/button";
 import { loginUser, registerUser } from "@/config/redux/action/authAction";
 import { emptyMessage } from "@/config/redux/reducer/authReducer";
 import UserLayout from "@/layout/UserLayout";
@@ -86,7 +87,7 @@ function index() {
   });
   return (
     <UserLayout>
-      <div className="flex justify-center items-center bg-indigo-100/20 h-[90vh] ">
+      <div className="flex justify-center items-center h-[90vh] ">
         <div className=" h-[80vh] w-[80vw] bg-white shadow-xl flex flex-col justify-between md:flex-row md:justify-center items-center">
           <div className="w-[100%] md:w-[60%] flex flex-col items-center">
             <p className="font-semibold text-2xl">
@@ -139,7 +140,7 @@ function index() {
                   className={` cursor-pointer p-2 rounded-lg  ${
                     (checkSignUpFields && !UserLoginMethod) ||
                     (checkLoginFields && UserLoginMethod)
-                      ? "bg-indigo-800 text-white"
+                      ? "bg-blue-700 text-white"
                       : "bg-gray-300/60 text-black"
                   } transition-all duration-1000`}
                   onClick={() => {
@@ -155,18 +156,19 @@ function index() {
               </div>
             </div>
           </div>
-          <div className="w-[100%] md:w-[40%] bg-indigo-900 flex flex-col gap-3 justify-center items-center h-[15vh] md:h-full">
+          <div className="w-[100%] md:w-[40%] bg-blue-900 flex flex-col gap-3 justify-center items-center h-[15vh] md:h-full">
             <p className="text-white">
               {!UserLoginMethod
                 ? "Already have an account?"
                 : "Don't have an account?"}
             </p>
-            <button
-              className="bg-gray-300/60 cursor-pointer px-8 py-2 rounded-lg"
+            <Button
+              variant="secondary"
+              className=" cursor-pointer px-8 py-2 rounded-lg"
               onClick={() => setUserLoginMethod(!UserLoginMethod)}
             >
               {!UserLoginMethod ? "Sign In" : "Sign Up"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

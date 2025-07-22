@@ -158,9 +158,9 @@ function DashboardLayout({ children }) {
   );
 
   return (
-    <div className=" bg-gray-50 fixed lg:static top-16 lg:top-auto">
+    <div className=" bg-gray-50 fixed w-full lg:static top-16 lg:top-auto">
       {/* Mobile Header */}
-      <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden bg-white  border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
