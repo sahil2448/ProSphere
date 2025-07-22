@@ -27,12 +27,12 @@ import UserLayout from "@/layout/UserLayout";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "../../Components/ui/skeleton";
+import { ScrollArea } from "../../Components/ui/scroll-area";
 
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { Button } from "../../Components/ui/button";
+import { Input } from "../../Components/ui/input";
 
 function Dashboard() {
   const router = useRouter();

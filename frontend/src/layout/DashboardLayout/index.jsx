@@ -1,4 +1,3 @@
-"use client";
 
 import { getAllUserProfiles } from "@/config/redux/action/authAction";
 import { setTokenIsPresent } from "@/config/redux/reducer/authReducer";

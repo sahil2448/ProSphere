@@ -4,7 +4,7 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUserProfiles } from "@/config/redux/action/authAction";
 import { BASE_URL } from "@/config";
-import { ScrollArea } from "@/Components/ui/scroll-area";
+import { ScrollArea } from "../../Components/ui/scroll-area";
 import { useRouter } from "next/router";
 
 function DiscoverPage() {

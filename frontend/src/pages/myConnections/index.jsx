@@ -10,8 +10,8 @@ import {
 } from "@/config/redux/action/authAction";
 import { BASE_URL } from "@/config";
 import { useRouter } from "next/router";
-import { Button } from "@/Components/ui/button";
-import { ScrollArea } from "@/Components/ui/scroll-area";
+import { Button } from "../../Components/ui/button";
+import { ScrollArea } from "../../Components/ui/scroll-area";
 
 function MyConnectionsPage() {
   const dispatch = useDispatch();

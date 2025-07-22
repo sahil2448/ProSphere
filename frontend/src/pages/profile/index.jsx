@@ -1,11 +1,11 @@
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../Components/ui/button";
 import { BASE_URL, clientServer } from "@/config";
 import { getAboutUser } from "@/config/redux/action/authAction";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
 // import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { ScrollArea } from "@/Components/ui/scroll-area";
+import { ScrollArea } from "../../Components/ui/scroll-area";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,9 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "../../Components/ui/dialog";
+import { Input } from "../../Components/ui/input";
+import { Label } from "../../Components/ui/label";
 
 function ProfilePage() {
   const [userProfile, setUserProfile] = useState({});

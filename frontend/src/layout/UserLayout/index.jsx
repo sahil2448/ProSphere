@@ -1,4 +1,4 @@
-import Navbar from "@/Components/Navbar";
+import Navbar from "../../Components/Navbar/index";
 import React from "react";
 
 function UserLayout({ children }) {

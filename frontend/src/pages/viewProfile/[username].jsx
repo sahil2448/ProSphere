@@ -5,13 +5,13 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/layout/DashboardLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPosts } from "@/config/redux/action/postAction";
-import { ScrollArea } from "@/Components/ui/scroll-area";
+import { ScrollArea } from "../../Components/ui/scroll-area";
 import {
   getConnectionRequest,
   getMyConnectionsRequests,
   sendConnectionRequest,
 } from "@/config/redux/action/authAction";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../Components/ui/button";
 import { useRouter } from "next/router";
 import { store } from "@/config/redux/store";
 
