@@ -27,7 +27,7 @@ function Navbar() {
           className="text-xl sm:text-2xl font-bold text-slate-900 cursor-pointer tracking-wide"
           onClick={() => router.push("/")}
         >
-          Pro Sphere
+          ProTweet
         </h1>
         <div className="flex items-center gap-4 sm:gap-6">
           {authState.profileFetched ? (
