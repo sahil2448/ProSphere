@@ -6,11 +6,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Home, Search, Users, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+// import { Button } from "@/components/ui/button";
+import { Button } from "../../Components/ui/button";
+import { Avatar, AvatarFallback } from "../../Components/ui/avatar";
+
+import { Badge } from "../../Components/ui/badge";
+import { ScrollArea } from "../../Components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "../../Components/ui/sheet";
 
 const navigationItems = [
   {

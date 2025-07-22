@@ -2,7 +2,7 @@ import { reset } from "@/config/redux/reducer/authReducer";
 import { useRouter } from "next/router";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../Components/ui/button";
 import { getAboutUser } from "@/config/redux/action/authAction";
 import { getAllPosts } from "@/config/redux/action/postAction";
 
