@@ -10,28 +10,28 @@ content-type: application/json
 }
 ###
 
-POST http://localhost:9090/users/login HTTP/1.1
+POST http://localhost:9090/user/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "bb@gmail.com",
-    "password": "1111"
+    "email": "vs@gmail.com",
+    "password": "vs"
 }
 
 ###
-GET  http://localhost:9090/user/get_user_and_profile HTTP/1.1
-content-type: application/json
+GET  http://localhost:9090/user/get_user_and_profile?token=6bc7c3f0a1e932e06e36eb94577bcdc48ad53239f4a5ea19281db30c77fe99dd HTTP/1.1
+# content-type: application/json
 
-{
-    "token":"6dd3fa8ddffa727bd8c60a2ff0ca09f4e47ab8f466ec823c787d3b6485e3b96e"
-}
+# {
+#     "token":""
+# }
 
 ###
 POST http://localhost:9090/user/update_profile_data HTTP/1.1
 content-type: application/json
 
 {
-    "token":"16ca075f8eb8bbfa327fb14d17b71bd808f8f0ec41c906de74e18bcaec6ebc39",
+    "token":"46aa3dabd7ca61923903160f0d7739e0ed61972b88db88877a6a36ba1e6b35d8",
     "bio":"Hii I am sahil yuvraj kamble",
     "currentPost":"Maharaja",
     "pastWork":[

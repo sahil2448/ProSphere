@@ -151,10 +151,14 @@ const getUserAndProfle = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const userProfile = await Profile.findOne({ userId: user._id }).populate(
+    let userProfile = await Profile.findOne({ userId: user._id }).populate(
       "userId",
       "name email username profilePicture"
     );
+
+    if (!userProfile) {
+      userProfile = new Profile({ userId: user._id });
+    }
 
     await userProfile.save();
 
@@ -193,8 +197,10 @@ const updateProfileData = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const profile_to_update = await Profile.findOne({ userId: user._id });
-
+    let profile_to_update = await Profile.findOne({ userId: user._id });
+    if (!profile_to_update) {
+      profile_to_update = new Profile({ userId: user._id });
+    }
     Object.assign(profile_to_update, newProfileData);
     await profile_to_update.save();
     return res.json({ message: "Profile updated successfully" });

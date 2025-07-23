@@ -4,7 +4,6 @@ import { getAboutUser } from "@/config/redux/action/authAction";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
-// import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { ScrollArea } from "../../Components/ui/scroll-area";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
