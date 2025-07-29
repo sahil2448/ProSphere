@@ -32,11 +32,19 @@ function ProfilePage() {
 
   const [inputData, setInputData] = useState({
     company: "",
-    positon: "",
+    position: "",
     Year: "",
+    school: "",
+    degree: "",
+    fieldOfStudy: "",
   });
 
   const handleWorkInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputData({ ...inputData, [name]: value });
+  };
+
+  const handleEducationInputChange = (e) => {
     const { name, value } = e.target;
     setInputData({ ...inputData, [name]: value });
   };
@@ -55,7 +63,6 @@ function ProfilePage() {
             return post.userId.username === authState.user.userId.username;
           })
         : [];
-
       setUserPosts(posts);
     }
   }, [authState.user, postState.posts, authState.user]);
@@ -89,6 +96,25 @@ function ProfilePage() {
     });
 
     dispatch(getAboutUser({ token: localStorage.getItem("token") }));
+  };
+
+  const handleDeleteEducation = (idx) => {
+    const updatedEducation = (userProfile.education || []).filter(
+      (_, i) => i !== idx
+    );
+    setUserProfile({
+      ...userProfile,
+      education: updatedEducation,
+    });
+  };
+  const handleWorkDelete = (idx) => {
+    const updatedPastwork = (userProfile.pastWork || []).filter(
+      (_, i) => i !== idx
+    );
+    setUserProfile({
+      ...userProfile,
+      pastWork: updatedPastwork,
+    });
   };
 
   return (
@@ -173,152 +199,349 @@ function ProfilePage() {
                         }
                         placeholder="Write a short bio about yourself..."
                       />
-                      <div>
-                        <div className="">
-                          <p className="font-semibold mb-2">Work History</p>
-                        </div>
 
-                        <div className="flex flex-wrap gap-3">
+                      <div>
+                        {(userProfile.userId.name !==
+                          authState.user.userId.name ||
+                          userProfile.bio !== authState.user.bio) && (
+                          <div className="flex mt-4">
+                            <button
+                              className="px-5 py-2 bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
+                              onClick={updateProfileData}
+                            >
+                              Save
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* ---------- EDUCATION HISTORY (IMPROVED) --------- */}
+                      <div className="flex flex-col gap-5">
+                        <div>
+                          <p className="font-bold text-lg  tracking-wide">
+                            Education History
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-5">
+                          {(userProfile.education || []).map((edu, idx) => (
+                            <div
+                              key={idx}
+                              className="min-w-[260px] relative max-w-xs bg-gray-100 border border-gray-200 shadow-md px-6 py-5 rounded-lg flex flex-col gap-1"
+                            >
+                              <div>
+                                <Button
+                                  className="absolute right-3 top-3 cursor-pointer hover text-red-800 hover:text-red-600 hover:bg-neutral-200 "
+                                  variant="ghost"
+                                  onClick={() => handleDeleteEducation(idx)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="size-5   "
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                    />
+                                  </svg>
+                                </Button>
+                              </div>
+
+                              <p className="text-base font-semibold">
+                                {edu.school}
+                              </p>
+                              <div className="text-sm space-y-1 mt-1">
+                                <div>
+                                  <span className="text-gray-600 font-medium mr-1">
+                                    Degree:
+                                  </span>
+                                  <span>{edu.degree}</span>
+                                </div>
+                                <div>
+                                  <span className="text-gray-600 font-medium mr-1">
+                                    Field:
+                                  </span>
+                                  <span>{edu.fieldOfStudy}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                          {(!userProfile.education ||
+                            userProfile.education.length === 0) && (
+                            <div className="text-gray-400 text-base my-4">
+                              No education history added yet.
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex gap-3">
+                          {" "}
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="cursor-pointer  min-w-[8rem] w-fit"
+                              >
+                                Add Education
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-md">
+                              <DialogHeader>
+                                <DialogTitle>
+                                  Fill all the information
+                                </DialogTitle>
+                                <DialogDescription>
+                                  Anyone who has this link will be able to view
+                                  this.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="flex flex-col  gap-2">
+                                <div className="grid flex-1 gap-2">
+                                  <Label htmlFor="text">School</Label>
+                                  <Input
+                                    id="school"
+                                    onChange={handleEducationInputChange}
+                                    name="school"
+                                    placeholder="School Name ?"
+                                  />
+                                </div>
+                                <div className="grid flex-1 gap-2">
+                                  <Label htmlFor="text">Degree</Label>
+                                  <Input
+                                    id="degree"
+                                    onChange={handleEducationInputChange}
+                                    name="degree"
+                                    placeholder="What Degree You Enrolled In ?"
+                                  />
+                                </div>
+                                <div className="grid flex-1 gap-2">
+                                  <Label htmlFor="text">Field of Study</Label>
+                                  <Input
+                                    id="fieldOfStudy"
+                                    onChange={handleEducationInputChange}
+                                    name="fieldOfStudy"
+                                    placeholder="Field of Study ?"
+                                  />
+                                </div>
+                              </div>
+                              <DialogFooter className=" sm:justify-start">
+                                <DialogClose asChild>
+                                  <Button
+                                    type="button"
+                                    className="cursor-pointer"
+                                    variant="secondary"
+                                  >
+                                    Close
+                                  </Button>
+                                </DialogClose>
+                                <DialogClose asChild className="">
+                                  <Button
+                                    type="button"
+                                    className="bg-black text-white cursor-pointer "
+                                    onClick={() => {
+                                      setUserProfile({
+                                        ...userProfile,
+                                        education: [
+                                          ...(userProfile.education || []),
+                                          {
+                                            school: inputData.school,
+                                            degree: inputData.degree,
+                                            fieldOfStudy:
+                                              inputData.fieldOfStudy,
+                                          },
+                                        ],
+                                      });
+                                    }}
+                                  >
+                                    Add Education{" "}
+                                  </Button>
+                                </DialogClose>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <div>
+                            {(userProfile.userId.name !==
+                              authState.user.userId.name ||
+                              (userProfile.education || []).length !==
+                                (authState.user.education || []).length) && (
+                              <div className="flex ">
+                                <Button
+                                  className="px-5  bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
+                                  onClick={updateProfileData}
+                                >
+                                  Save
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {/* -------- END EDUCATION HISTORY --------- */}
+
+                      {/* ---------- PAST WORK (IMPROVED) --------- */}
+
+                      <div className="flex flex-col gap-5">
+                        <div>
+                          <p className="font-bold text-lg tracking-wide">
+                            Work History
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-5">
                           {(userProfile.pastWork || []).map((work, idx) => (
                             <div
                               key={idx}
-                              className="bg-gray-100 border border-gray-200 shadow-sm w-fit px-4 py-2 rounded-md"
+                              className="min-w-[260px] relative max-w-xs bg-gray-100 border border-gray-200 shadow-md px-6 py-5 rounded-lg flex flex-col gap-1"
                             >
-                              <p className="text-sm">
-                                <span className="font-semibold">Company: </span>
+                              <div>
+                                <Button
+                                  className="absolute right-3 top-3 cursor-pointer hover text-red-800 hover:text-red-600 hover:bg-neutral-200 "
+                                  variant="ghost"
+                                  onClick={() => handleWorkDelete(idx)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="size-5   "
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                    />
+                                  </svg>
+                                </Button>
+                              </div>
+                              <p className="text-base font-semibold">
                                 {work.company}
                               </p>
-                              <p className="text-sm">
-                                <span className="font-semibold">
-                                  Position:{" "}
-                                </span>
-                                {work.position}
-                              </p>
-                              <p className="text-sm">
-                                <span className="font-semibold">
-                                  Year of Experience:{" "}
-                                </span>
-                                {work.Year}
-                              </p>
+                              <div className="text-sm space-y-1 mt-1">
+                                <div>
+                                  <span className="text-gray-600 font-medium mr-1">
+                                    Position:
+                                  </span>
+                                  <span>{work.position}</span>
+                                </div>
+                                <div>
+                                  <span className="text-gray-600 font-medium mr-1">
+                                    Experience:
+                                  </span>
+                                  <span>{work.Year}</span>
+                                </div>
+                              </div>
                             </div>
                           ))}
+                          {(!userProfile.pastWork ||
+                            userProfile.pastWork.length === 0) && (
+                            <div className="text-gray-400 text-base my-4">
+                              No work history added yet.
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      {/* <Dialog variant="ghost" className="cursor-pointer  ">
-                        <DialogTrigger
-                          asChild
-                          // onClick={async () =>
-                          // }
-                        >
-                          <Button variant="ghost" className="cursor-pointer">
-                            Add Work
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[500px] max-h-[80vh] min-h-[60vh] ">
-                          <DialogHeader className="h-[60vh] ">
-                            <DialogTitle></DialogTitle>
-                            <DialogDescription className="absolute top-14 overflow-y-scroll w-[90%] h-[75%]">
-                              <div>
-                                {<div className="flex flex-col gap-5"></div>}
-                              </div>
-                            </DialogDescription>
-                            <DialogFooter className="w-[90%] absolute bottom-2">
-                              <Input
-                                placeholder="Write your comment"
-                                // onChange={}
-                                // value={}
-                                className="bg-white"
-                              ></Input>
+                        <div className="flex gap-3">
+                          <Dialog>
+                            <DialogTrigger asChild>
                               <Button
-                                type="submit"
-                                className="cursor-pointer"
-                                // onClick={}
-                              >
-                                Add work
-                              </Button>
-                            </DialogFooter>
-                          </DialogHeader>
-                          <div className="grid gap-4"></div>
-                        </DialogContent>
-                      </Dialog> */}
-
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" className="cursor-pointer">
-                            Add Work
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
-                          <DialogHeader>
-                            <DialogTitle>Fill all the information</DialogTitle>
-                            <DialogDescription>
-                              Anyone who has this link will be able to view
-                              this.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="flex flex-col  gap-2">
-                            <div className="grid flex-1 gap-2">
-                              <Label htmlFor="text">Company Name</Label>
-                              <Input
-                                id="company"
-                                onChange={handleWorkInputChange}
-                                name="company"
-                                // defaultValue=""
-                                placeholder="Company Name ?"
-                              />
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                              <Label htmlFor="text">Position</Label>
-                              <Input
-                                id="position"
-                                onChange={handleWorkInputChange}
-                                name="position"
-                                // defaultValue=""
-                                placeholder="What was you position/role ?"
-                              />
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                              <Label htmlFor="text">Year</Label>
-                              <Input
-                                id="Year"
-                                onChange={handleWorkInputChange}
-                                name="Year"
-                                // defaultValue=""
-                                placeholder="How many you worked ?"
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter className=" sm:justify-start">
-                            <DialogClose asChild>
-                              <Button
-                                type="button"
-                                className="cursor-pointer"
-                                variant="secondary"
-                              >
-                                Close
-                              </Button>
-                            </DialogClose>
-                            <DialogClose asChild className="">
-                              <Button
-                                type="button"
-                                className="bg-black text-white cursor-pointer "
-                                onClick={() => {
-                                  setUserProfile({
-                                    ...userProfile,
-                                    pastWork: [
-                                      ...userProfile.pastWork,
-                                      inputData,
-                                    ],
-                                  });
-                                }}
-                                // variant="ghost"
+                                variant="outline"
+                                className="cursor-pointer min-w-[8rem] w-fit "
                               >
                                 Add Work
                               </Button>
-                            </DialogClose>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-md">
+                              <DialogHeader>
+                                <DialogTitle>
+                                  Fill all the information
+                                </DialogTitle>
+                                <DialogDescription>
+                                  Anyone who has this link will be able to view
+                                  this.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="flex flex-col  gap-2">
+                                <div className="grid flex-1 gap-2">
+                                  <Label htmlFor="text">Company Name</Label>
+                                  <Input
+                                    id="company"
+                                    onChange={handleWorkInputChange}
+                                    name="company"
+                                    placeholder="Company Name ?"
+                                  />
+                                </div>
+                                <div className="grid flex-1 gap-2">
+                                  <Label htmlFor="text">Position</Label>
+                                  <Input
+                                    id="position"
+                                    onChange={handleWorkInputChange}
+                                    name="position"
+                                    placeholder="What was your position/role ?"
+                                  />
+                                </div>
+                                <div className="grid flex-1 gap-2">
+                                  <Label htmlFor="text">Year</Label>
+                                  <Input
+                                    id="Year"
+                                    onChange={handleWorkInputChange}
+                                    name="Year"
+                                    placeholder="How many years you worked ?"
+                                  />
+                                </div>
+                              </div>
+                              <DialogFooter className=" sm:justify-start">
+                                <DialogClose asChild>
+                                  <Button
+                                    type="button"
+                                    className="cursor-pointer"
+                                    variant="secondary"
+                                  >
+                                    Close
+                                  </Button>
+                                </DialogClose>
+                                <DialogClose asChild className="">
+                                  <Button
+                                    type="button"
+                                    className="bg-black text-white cursor-pointer "
+                                    onClick={() => {
+                                      setUserProfile({
+                                        ...userProfile,
+                                        pastWork: [
+                                          ...(userProfile.pastWork || []),
+                                          {
+                                            company: inputData.company,
+                                            position: inputData.position,
+                                            Year: inputData.Year,
+                                          },
+                                        ],
+                                      });
+                                    }}
+                                  >
+                                    Add Work
+                                  </Button>
+                                </DialogClose>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <div>
+                            {(userProfile.pastWork || []).length !==
+                              (authState.user.pastWork || []).length && (
+                              <div className="flex ">
+                                <Button
+                                  className="px-5 py-2 bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
+                                  onClick={updateProfileData}
+                                >
+                                  Save
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {/* -------- END PAST WORK --------- */}
                     </div>
 
                     <div className="w-full lg:w-1/3  flex flex-col gap-4">
@@ -352,22 +575,6 @@ function ProfilePage() {
                         </ScrollArea>
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    {" "}
-                    {(userProfile.userId.name !== authState.user.userId.name ||
-                      userProfile.bio !== authState.user.bio ||
-                      userProfile.pastWork.length !==
-                        authState.user.pastWork.length) && (
-                      <div className="flex mt-4">
-                        <button
-                          className="px-5 py-2 bg-black cursor-pointer text-white rounded shadow transition-all duration-150 text-base font-semibold"
-                          onClick={updateProfileData}
-                        >
-                          Update Profile
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

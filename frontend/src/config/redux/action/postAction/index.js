@@ -68,15 +68,16 @@ const deletePost = createAsyncThunk(
 
 const incremetLikes = createAsyncThunk(
   "/post/increment_likes",
-  async ({ post }, thunkAPI) => {
+  async ({ post, user }, thunkAPI) => {
     try {
       console.log("from inc likes:", post._id);
       const response = await clientServer.post("/increment_likes", {
         params: {
           postId: post._id,
+          userId: user.userId,
         },
       });
-
+      
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

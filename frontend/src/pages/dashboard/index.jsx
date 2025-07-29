@@ -84,6 +84,36 @@ function Dashboard() {
 
   posts.reverse();
 
+  async function handleSharePost(post) {
+    const shareData = {
+      title: "Post from Pro-Tweet",
+      text: post.body,
+      url: window.location.href, // or your preferred URL
+    };
+
+    if (post.media) {
+      try {
+        const response = await fetch(`${BASE_URL}/${post.media}`);
+        const blob = await response.blob();
+        const file = new File([blob], "image.jpg", { type: blob.type });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          shareData.files = [file];
+        }
+      } catch (error) {
+        console.error("Could not fetch image for sharing:", error);
+      }
+    }
+
+    try {
+      await navigator.share(shareData);
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  }
+
+  const userId = authState.user?.userId?._id || "";
+
   if (authState.user) {
     return (
       <UserLayout>
@@ -177,6 +207,8 @@ function Dashboard() {
             </div>
             <div className="flex flex-col h-full gap-5 mt-5 pb-3">
               {posts.map((post, idx) => {
+                const userHasLiked =
+                  post.likedBy && post.likedBy.includes(userId);
                 return (
                   <div
                     key={post._id || idx}
@@ -186,7 +218,7 @@ function Dashboard() {
                       <img
                         src={`${BASE_URL}/${post.userId.profilePicture}`}
                         alt=""
-                        className="w-[4rem] border-1 rounded-full"
+                        className="w-[3.5rem] h-[3.5rem] border-1 rounded-full"
                       />
                       <div className="flex justify-between w-full">
                         <div>
@@ -242,15 +274,20 @@ function Dashboard() {
                       )}
                     </div>
                     <hr />
-
                     <div className="flex justify-evenly">
                       <Button
                         variant={`${"ghost"}`}
-                        className="cursor-pointer flex gap-2"
+                        className={`cursor-pointer flex gap-2 ${
+                          userHasLiked ? "bg-neutral-100" : ""
+                        }`}
                         onClick={async () => {
-                          await dispatch(incremetLikes({ post }));
-                          await dispatch(getAllPosts());
-                          setLikeActive(true);
+                          if (!userHasLiked) {
+                            await dispatch(
+                              incremetLikes({ post, user: authState.user })
+                            );
+                            await dispatch(getAllPosts());
+                            setLikeActive(true);
+                          }
                         }}
                       >
                         <svg
@@ -259,7 +296,9 @@ function Dashboard() {
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="currentColor"
-                          className="size-6"
+                          className={`size-6  ${
+                            userHasLiked ? "bg-neutral-100" : ""
+                          }`}
                         >
                           <path
                             strokeLinecap="round"
@@ -307,17 +346,32 @@ function Dashboard() {
                                   <div className="flex flex-col gap-5">
                                     {postState.comments.map((comment, idx) => {
                                       return (
-                                        <div key={idx}>
-                                          <div className="flex">
+                                        <div
+                                          key={idx}
+                                          className="hover:bg-neutral-100 transition-all duration-200 p-3 rounded-md"
+                                        >
+                                          <div className="flex gap-3">
                                             <img
                                               src={`${BASE_URL}/${post.userId.profilePicture}`}
                                               alt=""
-                                              className="rounded-full h-[40px]"
+                                              onClick={() =>
+                                                router.push(
+                                                  `/viewProfile/${post.userId.username}`
+                                                )
+                                              }
+                                              className="rounded-full cursor-pointer h-[50px] w-[50px]"
                                             />
                                             <div>
-                                              <p className="font-bold text-black">
+                                              <a
+                                                className="font-bold text-black cursor-pointer hover:underline"
+                                                onClick={() =>
+                                                  router.push(
+                                                    `/viewProfile/${post.userId.username}`
+                                                  )
+                                                }
+                                              >
                                                 {comment.userId.name}
-                                              </p>
+                                              </a>
                                               <p className="text-black">
                                                 @{comment.userId.username}
                                               </p>
@@ -362,7 +416,11 @@ function Dashboard() {
                         </DialogContent>
                       </Dialog>
                       {/* </Button> */}
-                      <Button variant="ghost" className="cursor-pointer">
+                      <Button
+                        variant="ghost"
+                        className="cursor-pointer"
+                        onClick={() => handleSharePost(post)}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"

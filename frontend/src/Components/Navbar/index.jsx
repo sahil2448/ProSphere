@@ -59,7 +59,7 @@ function Navbar() {
                 );
                 dispatch(getAllPosts({ token: localStorage.getItem("token") }));
               }}
-              className="bg-blue-900 hover:bg-blue-950 text-white font-semibold px-4 py-2 rounded transition-all text-sm sm:text-base shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="bg-blue-900 hover:bg-blue-950 text-white font-semibold px-4 py-2 rounded transition-all text-sm sm:text-base shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               Be a part
             </button>

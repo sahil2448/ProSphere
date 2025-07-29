@@ -1,4 +1,3 @@
-
 import { getAllUserProfiles } from "@/config/redux/action/authAction";
 import { setTokenIsPresent } from "@/config/redux/reducer/authReducer";
 import { useRouter } from "next/router";
@@ -40,6 +39,12 @@ function DashboardLayout({ children }) {
   const [activeSection, setActiveSection] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const authState = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!authState.allProfilesFetched) {
+      dispatch(getAllUserProfiles());
+    }
+  }, []);
 
   useEffect(() => {
     if (localStorage.getItem("token") === null) {
@@ -114,6 +119,9 @@ function DashboardLayout({ children }) {
             authState.allUsers.slice(0, 10).map((person, idx) => (
               <div
                 key={idx}
+                onClick={() =>
+                  router.push(`/viewProfile/${person.userId.username}`)
+                }
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <Avatar className="h-10 w-10">

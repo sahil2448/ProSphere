@@ -116,16 +116,30 @@ const deleteCommentOfUser = async (req, res) => {
 };
 
 const incremetLikes = async (req, res) => {
-  const { postId } = req.body.params;
+  // Get postId and userId
+  const { postId, userId } = req.body.params;
+  console.log("the userId:", userId._id);
   try {
     const post = await Post.findOne({ _id: postId });
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    post.likes = post.likes + 1;
+    // Check if user already liked
+    if (post.likedBy.includes(userId._id)) {
+      return res.status(400).json({ message: "You already liked this post" });
+    }
+
+    // Add userId to likedBy and increment likes
+    post.likedBy.push(userId._id);
+    post.likes += 1;
     await post.save();
-    return res.status(200).json({ message: "Likes Incremented" });
+
+    return res.status(200).json({
+      message: "Likes Incremented",
+      likes: post.likes,
+      likedBy: post.likedBy,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
