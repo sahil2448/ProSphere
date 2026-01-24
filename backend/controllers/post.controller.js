@@ -7,7 +7,9 @@ const activeCheck = async (req, res) => {
 };
 
 const test = async (req, res) => {
-  return res.status(200).json({ message: "test is running successfully!" });
+  return res
+    .status(200)
+    .json({ message: "test is running successfully, yyeee!" });
 };
 const createPost = async (req, res) => {
   try {
