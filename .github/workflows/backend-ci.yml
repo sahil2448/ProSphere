@@ -31,3 +31,7 @@ jobs:
       - name: Build (backend)
         run: npm run build --if-present
         working-directory: backend
+
+      - name: Restart backend via PM2
+        run: sudo pm2 restart backend
+        working-directory: backend
