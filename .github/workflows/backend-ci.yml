@@ -15,7 +15,15 @@ jobs:
         node-version: [22.x]
 
     steps:
+      - name: Backup .env
+        run : |
+           if [ -f .env ]; then mv .env /tmp/env_backup; fi
+           
       - uses: actions/checkout@v4
+
+      - name: Restore .env
+        run: |
+          if [ -f /tmp/env_backup ]; then mv /tmp/env_backup .env; fi
 
       - name: Use Node.js ${{ matrix.node-version }} (with npm cache)
         uses: actions/setup-node@v4
