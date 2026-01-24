@@ -6,6 +6,9 @@ const activeCheck = async (req, res) => {
   return res.status(200).json({ message: "Running" });
 };
 
+const test = async (req, res) => {
+  return res.status(200).json({ message: "test is running successfully!" });
+};
 const createPost = async (req, res) => {
   try {
     const { token } = req.body;
@@ -34,7 +37,7 @@ const getAllPosts = async (req, res) => {
   try {
     const allPosts = await Post.find().populate(
       "userId",
-      "name username email profilePicture"
+      "name username email profilePicture",
     );
     return res.json({ allPosts });
   } catch (error) {
@@ -76,7 +79,7 @@ const deletePost = async (req, res) => {
     await Post.deleteOne({ _id: postId });
     const allPosts = await Post.find().populate(
       "userId",
-      "name username email profilePicture"
+      "name username email profilePicture",
     );
     // ANOTHER METHOD TO HANDLE DELETPOST...WITHOUT DELETING THE POST:
     // We will write:
@@ -187,7 +190,7 @@ const getCommentByPost = async (req, res) => {
 
     const allComments = await Comment.find({ postId }).populate(
       "userId",
-      "username name"
+      "username name",
     );
     return res.json(allComments);
   } catch (e) {
@@ -203,5 +206,6 @@ export {
   commentPost,
   getCommentByPost,
   deleteCommentOfUser,
+  test,
   incremetLikes,
 };

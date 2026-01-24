@@ -54,11 +54,32 @@ function Dashboard() {
   };
 
   const handleDeletePost = async (post) => {
-    await dispatch(
-      deletePost({
-        postId: post._id,
-      })
-    );
+    try {
+      await dispatch(
+        deletePost({
+          postId: post._id,
+        })
+      );
+
+      toast("Post deleted !", {
+        action: {
+          label: "X",
+          onClick: () => console.log("X"),
+        },
+        style: {
+          background: "#BAFFBF", // Indigo
+          color: "#006400",
+          opacity: "1",
+
+          width: "fit-content",
+          minWidth: "60%",
+
+          border: "1px solid rgb(21 128 61)",
+        },
+      });
+    } catch (e) {
+      console.log("error");
+    }
   };
 
   useEffect(() => {
@@ -235,14 +256,9 @@ function Dashboard() {
                             <Button
                               variant="outline"
                               className="text-red-600 cursor-pointer border-red-600 hover:text-red-700"
-                              onClick={() =>
-                                toast("Post has been deleted successfully!", {
-                                  action: {
-                                    label: "X",
-                                    onClick: () => console.log("X"),
-                                  },
-                                })
-                              }
+                              // onClick={() =>
+
+                              // }
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"

@@ -5,6 +5,7 @@ import UserLayout from "@/layout/UserLayout";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 function index() {
   const authState = useSelector((state) => state.auth);
@@ -27,28 +28,31 @@ function index() {
         registerUser({ name, username, email, password })
       ).unwrap();
 
+      setTst(true);
       setUserLoginMethod(true);
     } catch (err) {
       console.error("Registration failed:", err);
     }
   };
 
-  // useEffect(() => {
-  //   {
-  //     toast("User Register Successfully!", {
-  //       action: {
-  //         label: "X",
-  //         onClick: () => console.log("X"),
-  //       },
-  //       // style: {
-  //       //   background: "rgb(220 252 231)", // Indigo
-  //       //   color: "rgb(21 128 61)",
-  //       //   opacity: "1",
-  //       //   border: " rgb(21 128 61)",
-  //       // },
-  //     });
-  //   }
-  // }, [tst, authState.message.message]);
+  useEffect(() => {
+    {
+      // if (tst) {
+      toast("User Register Successfully!", {
+        action: {
+          label: "X",
+          onClick: () => console.log("X"),
+        },
+        style: {
+          background: "#BAFFBF", // Indigo
+          color: "#006400",
+          opacity: "1",
+          border: "1px solid rgb(21 128 61)",
+        },
+      });
+      // }
+    }
+  }, [tst, authState.allUsers]);
 
   const handleLogin = () => {
     console.log("Logging in...");

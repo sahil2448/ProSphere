@@ -112,7 +112,6 @@ function DashboardLayout({ children }) {
       <div className="p-6 border-b border-gray-200">
         <h2 className="text-xl font-bold text-gray-900">Top Profiles</h2>
       </div>
-      {/* <CardContent className="p-0"> */}
       <ScrollArea className="h-[calc(100vh-10rem)] ">
         <div className="space-y-3 px-6 pb-6">
           {authState.allProfilesFetched ? (
@@ -161,13 +160,11 @@ function DashboardLayout({ children }) {
           )}
         </div>
       </ScrollArea>
-      {/* </CardContent> */}
     </div>
   );
 
   return (
     <div className=" bg-gray-50 fixed w-full lg:static top-16 lg:top-auto">
-      {/* Mobile Header */}
       <div className="lg:hidden bg-white  border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -183,12 +180,10 @@ function DashboardLayout({ children }) {
       </div>
 
       <div className="flex h-screen lg:h-[calc(89vh-0px)]">
-        {/* Desktop Sidebar */}
         <div className="hidden lg:flex lg:w-80 h-[99%] lg:flex-col bg-white border-r border-gray-200">
           <SidebarContent />
         </div>
 
-        {/* Main Content */}
         <div className="flex-1  flex flex-col sm:flex-row overflow-hidden py-5 lg:py-0">
           <main className="flex-1 lg:px-10">
             <div className="h-full  border-r border-l border-gray-200">
@@ -196,14 +191,12 @@ function DashboardLayout({ children }) {
             </div>
           </main>
 
-          {/* Right Sidebar - Top Profiles */}
           <div className="hidden xl:block xl:w-80 h-[100%]  bg-white border-l border-gray-200">
             <TopProfiles />
           </div>
         </div>
       </div>
 
-      {/* Mobile Top Profiles - Bottom Sheet or Modal */}
       <div className="xl:hidden fixed bottom-4 right-4">
         <Sheet>
           <SheetTrigger asChild>

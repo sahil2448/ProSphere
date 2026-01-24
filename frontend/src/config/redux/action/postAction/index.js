@@ -77,7 +77,7 @@ const incremetLikes = createAsyncThunk(
           userId: user.userId,
         },
       });
-      
+
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

@@ -8,7 +8,9 @@ import {
   deleteCommentOfUser,
   incremetLikes,
   commentPost,
+  test,
 } from "../controllers/post.controller.js";
+
 import multer from "multer";
 
 const router = Router();
@@ -25,7 +27,7 @@ const myStorage = multer.diskStorage({
 });
 
 const uploadMedia = multer({ storage: myStorage });
-
+router.route("/test").get(test);
 router.route("/create_post").post(uploadMedia.single("media"), createPost);
 router.route("/posts").get(getAllPosts);
 router.route("/delete_post").delete(deletePost);

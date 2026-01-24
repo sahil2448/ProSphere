@@ -19,7 +19,7 @@ app.use("/user", userRoutes);
 
 const start = async () => {
   const connectDB = await mongoose.connect(
-    "mongodb+srv://syk2448:sk_iitr@cluster0.up0a0ri.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://syk2448:sk_iitr@cluster0.up0a0ri.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
   );
   console.log("Connected to MONGO_DB");
 };
