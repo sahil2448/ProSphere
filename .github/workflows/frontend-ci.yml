@@ -8,13 +8,22 @@ on:
 
 jobs:
   build-and-deploy-frontend:
-    runs-on: self-hosted
+    # CHANGE 1: Use the specific name of your frontend runner 
+    # to prevent the backend runner from "stealing" the job.
+    runs-on: frontend-runner
 
     strategy:
       matrix:
         node-version: [22.x]
 
     steps:
+      # CHANGE 2: Manually clean the workspace. 
+      # Self-hosted runners don't wipe the folder between builds like GitHub-hosted ones do.
+      - name: Clean Workspace
+        run: |
+          echo "Cleaning up previous build artifacts..."
+          rm -rf ./* || true
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -26,6 +35,8 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies (frontend)
+        # We use --legacy-peer-deps if you still have version conflicts, 
+        # but syncing the lockfile is the better long-term fix.
         run: npm ci
         working-directory: frontend
 
@@ -35,5 +46,4 @@ jobs:
 
       - name: Restart/start frontend via PM2
         run: |
-          # ensure env file exists on runner at frontend/.env.production
           pm2 restart frontend --update-env || pm2 start npm --name frontend -- start --prefix frontend
