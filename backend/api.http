@@ -75,7 +75,7 @@ content-type: application/json
     "postId":"685ce693f95a8d69dc14d608"
 }
 
-
+###############################
 ###
 GET http://localhost:9090/user/getProfileUsingUsername HTTP/1.1
 content-type: application/json
